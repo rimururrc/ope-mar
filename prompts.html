@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Central Marítima e Operacional</title>
+  <style>
+    body {
+      background: #000 url('veleiro1.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      overflow: auto;
+    }
+
+    /* Menu Superior */
+    .menu-bar {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 15px 0;
+      background-color: rgba(20, 20, 20, 0.9);
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .menu-bar a {
+      color: white;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    .menu-bar a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+      background-color: rgba(31, 31, 31, 0.7);
+      padding: 10px;
+      border-radius: 8px;
+      display: inline-block;
+      margin-left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .logo-bar,
+    .button-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      background-color: rgba(31, 31, 31, 0.7);
+      border-radius: 20px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(5px);
+      padding: 20px;
+      max-width: 1000px; /* Limite máximo de largura */
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .ai-button,
+    .prompt-button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: rgba(26, 26, 26, 0.9);
+      color: white;
+      text-decoration: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      transition: background-color 0.3s;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .ai-button:hover,
+    .prompt-button:hover {
+      background-color: rgba(51, 51, 51, 0.9);
+    }
+
+    .ai-button img {
+      height: 24px;
+      width: 24px;
+      border-radius: 4px;
+    }
+
+    .separator {
+      text-align: center;
+      margin: 40px 0;
+      font-size: 1.2rem;
+      color: #ccc;
+    }
+
+    .separator img {
+      vertical-align: middle;
+      height: 40px;
+      width: auto;
+    }
+  </style>
+  <style>
+  .menu-bar {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    padding: 15px 0;
+    background-color: rgba(20, 20, 20, 0.9);
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .menu-bar a {
+    color: white;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+
+  .menu-bar a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  .footer {
+    text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #aaa;
+      background-color: rgba(20, 20, 20, 0.8);
+      margin-top: auto;
+    }
+    
+    /* Estilo do pop-up */
+    #update-popup {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      max-width: 400px;
+      background: rgba(20, 30, 50, 0.95);
+      border: 1px solid rgba(0, 209, 255, 0.5);
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(5px);
+      z-index: 10000;
+      animation: slideIn 0.5s ease-out, pulse 2s 3s;
+      transform: translateX(0);
+      transition: transform 0.3s ease;
+    }
+    
+    #update-popup:hover {
+      transform: translateX(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+    }
+
+    .popup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .popup-title {
+      color: #00d1ff;
+      font-size: 1.4rem;
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(0, 209, 255, 0.5);
+      margin: 0;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: color 0.3s;
+      padding: 5px;
+    }
+
+    .close-btn:hover {
+      color: #ff4081;
+    }
+
+    .update-badge {
+      background: linear-gradient(135deg, #0080a0, #006080);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
+    .update-content {
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .update-content strong {
+      color: #00d1ff;
+    }
+
+    .update-content ol {
+      padding-left: 20px;
+    }
+
+    .update-content li {
+      margin-bottom: 8px;
+    }
+
+    .suggestion {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.85rem;
+      color: #aad;
+    }
+
+    /* Animações */
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      }
+      50% {
+        box-shadow: 0 10px 30px rgba(0, 209, 255, 0.4);
+      }
+      100% {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      }
+    }
+</style>
+</head>
+<body>
+
+<h1>Central Marítima e Operacional</h1>
+  
+  <!-- Menu Superior -->
+<div class="menu-bar">
+  <a href="prompts.html">Prompts</a>
+  <a href="como-usar.html">Como Usar</a>
+  <a href="ias.html">IAs</a>
+  <a href="sistemas.html">Sistemas</a>
+  <a href="noticias.html">Notícias</a>
+  <a href="globo.html">Globo</a>
+  <a href="linksuteis.html">Links Úteis</a>
+</div>
+
+  <!-- Título Principal -->
+  <h1>Pesquisa Marítima</h1>
+
+  <!-- Links para IAs -->
+  <div class="logo-bar">
+    <a href="https://chat.openai.com/share/68431ce1-7ff8-8000-8b15-0410c47e504e"  target="_blank" class="ai-button">
+      <img src="https://chat.openai.com/favicon.ico"  alt="ChatGPT">
+      <span>ChatGPT</span>
+    </a>
+    <a href="https://copilot.microsoft.com/shares/baqMrpRn8YrtmzXR2mGL7"  target="_blank" class="ai-button">
+      <img src="https://copilot.microsoft.com/favicon.ico"  alt="Copilot">
+      <span>Copilot</span>
+    </a>
+    <a href="https://g.co/gemini/share/b31a29996046"  target="_blank" class="ai-button">
+      <img src="https://www.gstatic.com/policies/favicon.ico"  alt="Gemini">
+      <span>Gemini</span>
+    </a>
+    <a href="https://grok.com/share/bGVnYWN5_27427439-cc80-40ca-b5b8-c734c396dfd3"  target="_blank" class="ai-button">
+      <img src="https://grok.x.com/favicon.ico"  alt="Grok">
+      <span>Grok</span>
+    </a>
+    <a href="https://grok.com/"  target="_blank" class="ai-button">
+      <img src="https://grok.x.com/favicon.ico"  alt="Grok">
+      <span>Com</span>
+    </a>
+    <a href="https://www.perplexity.ai/search/tudo-bom-perpexity-como-estao-NhX7Q0CBR1GoXyMGfxqhhA"  target="_blank" class="ai-button">
+      <img src="https://www.perplexity.ai/favicon.ico"  alt="Perplexity">
+      <span>Perplexity</span>
+    </a>
+    <a href="https://www.perplexity.ai/"  target="_blank" class="ai-button">
+      <img src="https://www.perplexity.ai/favicon.ico"  alt="Perplexity">
+      <span>Com</span>
+    </a>
+  </div>
+
+  <!-- Botões de Prompt - Pesquisa Marítima -->
+  <div class="button-bar">
+    <button class="prompt-button">Amazônia Azul</button>
+    <button class="prompt-button">Geopolítica</button>
+    <button class="prompt-button">Portos e Logística</button>
+    <button class="prompt-button">Indústria Naval</button>
+    <button class="prompt-button">Ensino Profissional Marítimo (EPM)</button>
+    <button class="prompt-button">Sustentabilidade Energética</button>
+    <button class="prompt-button">Segurança Marítima</button>
+    <button class="prompt-button">Tráfico de Drogas</button>
+    <button class="prompt-button">Pirataria e Ataques a Navios</button>
+    <button class="prompt-button">Meio Ambiente</button>
+    <button class="prompt-button">Tecnologia Marítima</button>
+    <button class="prompt-button">Comissões</button>
+  </div>
+
+  <!-- Separador Central -->
+  <div class="separator">
+    &nbsp;<img src="ancora.png" alt="Ancoragem">&nbsp;
+  </div>
+
+  <!-- Título da Segunda Parte -->
+  <h1>Pesquisa Operacional</h1>
+
+  <!-- Links para IAs - Pesquisa Operacional -->
+  <div class="logo-bar">
+    <a href="https://chatgpt.com/share/684c47de-dcfc-8000-9df4-2c4b1d013a7d"  target="_blank" class="ai-button">
+      <img src="https://chat.openai.com/favicon.ico"  alt="ChatGPT">
+      <span>ChatGPT</span>
+    </a>
+    <a href="https://copilot.microsoft.com/shares/6pZB9reFb6i5wrwopyA5C"  target="_blank" class="ai-button">
+      <img src="https://copilot.microsoft.com/favicon.ico"  alt="Copilot">
+      <span>Copilot</span>
+    </a>
+    <a href="https://g.co/gemini/share/f5a05a4f11be"  target="_blank" class="ai-button">
+      <img src="https://www.gstatic.com/policies/favicon.ico"  alt="Gemini">
+      <span>Gemini</span>
+    </a>
+    <a href="https://grok.com/share/bGVnYWN5_0fea4d29-d51c-428f-a50d-f5513073e409"  target="_blank" class="ai-button">
+      <img src="https://grok.x.com/favicon.ico"  alt="Grok">
+      <span>Grok</span>
+    </a>
+    <a href="https://grok.com/"  target="_blank" class="ai-button">
+      <img src="https://grok.x.com/favicon.ico"  alt="Grok">
+      <span>P.O.</span>
+    </a>
+    <a href="https://www.perplexity.ai/search/tudo-bom-perplexity-como-estao-snLTTfQtTXK7oUvaiQ0pIw"  target="_blank" class="ai-button">
+      <img src="https://www.perplexity.ai/favicon.ico"  alt="Perplexity">
+      <span>Perplexity</span>
+    </a>
+    <a href="https://www.perplexity.ai/"  target="_blank" class="ai-button">
+      <img src="https://www.perplexity.ai/favicon.ico"  alt="Perplexity">
+      <span>P.O.</span>
+    </a>
+  </div>
+
+  <!-- Botões de Prompt - Pesquisa Operacional -->
+  <div class="button-bar">
+    <button class="prompt-button">Atividades Estratégicas</button>
+    <button class="prompt-button">Movimentação Naval e Portuária</button>
+    <button class="prompt-button">Ameaças Cibernéticas</button>
+    <button class="prompt-button">Tensões Políticas/Conflitos Locais</button>
+    <button class="prompt-button">Inteligência Econômica</button>
+    <button class="prompt-button">Meteorologia</button>
+    <button class="prompt-button">Pirataria</button>
+    <button class="prompt-button">Rotas Criminosas</button>
+    <button class="prompt-button">OSINT</button>
+    <button class="prompt-button">Impacto Político</button>
+    <button class="prompt-button">Pesquisa Operacional</button>
+  </div>
+
+  <!-- Script para Copiar Prompts -->
+  <script>
+    const promptsMaritimos = {
+      "Amazônia Azul": "Busque notícias da ultima semana e relevantes sobre a Amazônia Azul, especialmente no que tange à soberania, biodiversidade, riquezas naturais e estratégias de proteção.",
+      "Geopolítica": "Busque por notícias da ultima semana com impacto geopolítico no meio marítimo, como tensões internacionais, alianças estratégicas, movimentações navais, disputas territoriais e exercícios militares.",
+      "Portos e Logística": "Procure por notícias da ultima semana sobre portos, infraestrutura, movimentação de cargas, gargalos logísticos e investimentos no setor portuário e de transporte marítimo.",
+      "Indústria Naval": "Traga informações da ultima semana sobre a indústria naval nacional e internacional, incluindo construção de navios, encomendas, parcerias e avanços tecnológicos.",
+      "Ensino Profissional Marítimo (EPM)": "Pesquise notícias da ultima semana sobre o Ensino Profissional Marítimo, cursos, capacitações, novas diretrizes da Marinha do Brasil e parcerias educacionais.",
+      "Sustentabilidade Energética": "Busque informações da ultima semana sobre fontes de energia sustentável no setor marítimo, como eólica offshore, combustíveis alternativos e políticas ambientais aplicadas à navegação.",
+      "Segurança Marítima": "Reúna notícias da ultima semana relacionadas à segurança marítima, abordando combate a crimes no mar, proteção de rotas comerciais, presença naval e cooperação internacional.",
+      "Tráfico de Drogas": "Pesquise por notícias da ultima semana sobre tráfico de drogas com envolvimento marítimo, tanto em águas nacionais quanto internacionais, incluindo operações de apreensão e rotas detectadas.",
+      "Pirataria e Ataques a Navios": "Busque por notícias da ultima semana sobre pirataria marítima, sequestros de navios e incidentes de segurança em rotas comerciais globais.",
+      "Meio Ambiente": "Traga notícias da ultima semana relacionadas ao meio ambiente marinho, incluindo derramamento de óleo, poluição, conservação da fauna marinha e medidas de mitigação.",
+      "Tecnologia Marítima": "Pesquise por inovações e tecnologias emergentes voltadas para o setor marítimo publicadas na ultima semana, como sistemas de navegação autônoma, sensores, inteligência artificial embarcada, etc.",
+      "Comissões": `Atue como um analista de Inteligência Marítima e colete notícias recentes e informações confiáveis, com fontes, sobre a cidade/porto/localidade onde meu navio irá atracar. O objetivo é avaliar riscos e fatores que possam impactar a operação do navio e a segurança da tripulação durante o período de estadia informado.
+
+Período de estadia: [inserir datas]
+Porto/localidade de atracação: [inserir nome do porto ou cidade]
+
+Necessito de informações sobre os seguintes tópicos prioritários:
+
+- Logística portuária: Greves, congestionamentos, indisponibilidade de rebocadores, fechamento de terminais etc.
+- Segurança marítima e urbana: Atividades ilegais, protestos, crimes, riscos de pirataria, conflitos regionais.
+- Saúde e questões sanitárias: Surto de doenças, medidas sanitárias em vigor, exigências locais.
+- Questões climáticas e ambientais: Previsão de tempestades, ciclones, enchentes, nevoeiros, mar agitado.
+- Impactos à tripulação: Restrições ao desembarque, riscos ao circular na cidade, alertas do governo local ou embaixadas.
+- Outros fatores relevantes que possam impactar a operação, o bem-estar da tripulação ou a permanência no porto.
+
+Organize as informações por tema, com data, fonte confiável e breve resumo de cada notícia/evento. Priorize fontes confiáveis, como agências de notícias internacionais, sites marítimos, autoridades locais ou alertas de governo.`
+    };
+
+    const promptsOperacionais = {
+      "Atividades Estratégicas": "Buscar: Notícias sobre movimentos militares, exercícios conjuntos, ou acordos secretos de potências estrangeiras na região. Regras Gerais 1. Temporalidade: Apenas eventos dos últimos 7 dias (ou período definido). 2. Geolocalização: Sempre vincular ao porto/localidade especificada. 3. Hierarquia: Ordenar por relevância (risco alto primeiro). 4. Triagem: Descartar informações não verificadas ou com fontes duvidosas.",
+      "Movimentação Naval e Portuária": "Navios suspeitos, alterações não autorizadas em rotas, ou escalas prolongadas sem justificativa. Regras Gerais 1. Temporalidade: Apenas eventos dos últimos 7 dias (ou período definido). 2. Geolocalização: Sempre vincular ao porto/localidade especificada. 3. Hierarquia: Ordenar por relevância (risco alto primeiro). 4. Triagem: Descartar informações não verificadas ou com fontes duvidosas.",
+      "Ameaças Cibernéticas": "Tentativas de invasão a sistemas portuários ou relatórios de vulnerabilidades críticas. Regras Gerais 1. Temporalidade: Apenas eventos dos últimos 7 dias (ou período definido). 2. Geolocalização: Sempre vincular ao porto/localidade especificada. 3. Hierarquia: Ordenar por relevância (risco alto primeiro). 4. Triagem: Descartar informações não verificadas ou com fontes duvidosas.",
+      "Tensões Políticas/Conflitos Locais": "Protestos, greves portuárias, ou ações de grupos extremistas. Regras Gerais 1. Temporalidade: Apenas eventos dos últimos 7 dias (ou período definido). 2. Geolocalização: Sempre vincular ao porto/localidade especificada. 3. Hierarquia: Ordenar por relevância (risco alto primeiro). 4. Triagem: Descartar informações não verificadas ou com fontes duvidosas.",
+      "Inteligência Econômica": "Movimentação anormal de cargas estratégicas ou sanções recentes. Regras Gerais 1. Temporalidade: Apenas eventos dos últimos 7 dias (ou período definido). 2. Geolocalização: Sempre vincular ao porto/localidade especificada. 3. Hierarquia: Ordenar por relevância (risco alto primeiro). 4. Triagem: Descartar informações não verificadas ou com fontes duvidosas.",
+      "Meteorologia": "Alertas oficiais de tempestades, tsunamis, ou condições que afetem a logística. Regras Gerais 1. Temporalidade: Apenas eventos dos últimos 7 dias (ou período definido). 2. Geolocalização: Sempre vincular ao porto/localidade especificada. 3. Hierarquia: Ordenar por relevância (risco alto primeiro). 4. Triagem: Descartar informações não verificadas ou com fontes duvidosas.",
+      "Pirataria": "Ataques recentes, áreas de risco atualizadas, ou táticas novas. Regras Gerais 1. Temporalidade: Apenas eventos dos últimos 7 dias (ou período definido). 2. Geolocalização: Sempre vincular ao porto/localidade especificada. 3. Hierarquia: Ordenar por relevância (risco alto primeiro). 4. Triagem: Descartar informações não verificadas ou com fontes duvidosas.",
+      "Rotas Criminosas": "Relatórios de tráfico, rotas de evasão, ou apreensões recentes. Regras Gerais 1. Temporalidade: Apenas eventos dos últimos 7 dias (ou período definido). 2. Geolocalização: Sempre vincular ao porto/localidade especificada. 3. Hierarquia: Ordenar por relevância (risco alto primeiro). 4. Triagem: Descartar informações não verificadas ou com fontes duvidosas.",
+      "OSINT": "Dados de mídia social, fóruns especializados, e relatórios governamentais. Regras Gerais 1. Temporalidade: Apenas eventos dos últimos 7 dias (ou período definido). 2. Geolocalização: Sempre vincular ao porto/localidade especificada. 3. Hierarquia: Ordenar por relevância (risco alto primeiro). 4. Triagem: Descartar informações não verificadas ou com fontes duvidosas.",
+      "Impacto Político": "Reações governamentais, mudanças legislativas, ou declarações oficiais. Regras Gerais 1. Temporalidade: Apenas eventos dos últimos 7 dias (ou período definido). 2. Geolocalização: Sempre vincular ao porto/localidade especificada. 3. Hierarquia: Ordenar por relevância (risco alto primeiro). 4. Triagem: Descartar informações não verificadas ou com fontes duvidosas.",
+      "Pesquisa Operacional": `Atue como um analista de Inteligência Operacional e colete notícias da última semana e informações confiáveis, com fontes, sobre as cidades/portos/localidades onde há indícios de atividade operacional de países diversos. O objetivo é avaliar riscos e fatores que possam impactar a Política Nacional e a Segurança da nação.
+Período de análise: [inserir datas]
+Porto/localidade: [inserir nome do porto ou cidade]
+Tópicos Prioritários para Investigação
+Atividades Estratégicas de Países Estrangeiros
+Presença militar ou logística de potências estrangeiras (ex.: China, Rússia, EUA, Irã).
+Exercícios navais, aéreos ou terrestres próximos à localidade.
+Acordos bilaterais ou investimentos suspeitos em infraestrutura crítica.
+Movimentação Naval e Portuária
+Navios de bandeira estrangeira com atividades incomuns (ex.: cargas não declaradas, escalas prolongadas).
+Relatos de embarcações de inteligência ou pesquisa oceanográfica próximas ao porto.
+Interrupções ou alterações não explicadas nas rotas marítimas.
+Ameaças à Segurança Cibernética e Infraestrutura Crítica
+Tentativas de hacking ou espionagem digital contra instalações portuárias/governamentais.
+Vulnerabilidades em sistemas de controle portuário (ex.: GPS, radar, comunicações).
+Tensões Políticas ou Conflitos Locais
+Protestos, greves ou instabilidade social que possam afetar operações.
+Atuação de grupos criminosos ou organizações extremistas na região.
+Inteligência Econômica e Comercial
+Fluxo anormal de mercadorias (ex.: armas, tecnologia sensível, recursos estratégicos).
+Sanções internacionais ou embargos afetando a região.
+Meteorologia e Condições Ambientais (Novo)
+Alertas de tempestades, furacões ou condições climáticas extremas que possam impactar operações.
+Nível de visibilidade, correntes marítimas ou outros fatores relevantes para navegação/segurança.
+Pirataria e Ameaças Marítimas (Novo)
+Relatos recentes de ataques piratas, sequestros ou abordagens suspeitas em rotas próximas.
+Áreas de alto risco (ex.: Golfo da Guiné, Estreito de Malaca).
+Rotas Utilizadas por Organizações Criminosas (Novo)
+Trajetos conhecidos de tráfico (drogas, armas, pessoas) ou contrabando.
+Métodos de evasão (ex.: desvio de sinais AIS, uso de embarcações fantasmas).
+Informações de Fontes Abertas (OSINT) e Confiáveis
+Dados de agências de notícias, relatórios governamentais e institutos de pesquisa.
+Verificação de desinformação ou fake news relacionadas à localidade.
+Impacto na Política Nacional
+Como as atividades detectadas podem influenciar decisões governamentais ou alianças estratégicas.
+Formato de Saída Esperado
+Resumo Executivo
+Período coberto e localidade analisada.
+Principais eventos identificados (em tópicos curtos).
+Análise Detalhada por Tópico
+Dados cronológicos, fontes verificadas (links, documentos) e nível de confiabilidade.
+Análise de Risco: Classificação (baixo/médio/alto) para cada ameaça.
+Situação de Oportunidades e Ameaças (Novo)
+Ameaças:
+Lista de riscos iminentes ou potenciais (ex.: clima extremo, presença militar estrangeira, rotas criminosas ativas).
+            Impacto estimado na segurança nacional.
+Oportunidades:
+            Lacunas identificadas para fortalecimento operacional (ex.: cooperação internacional, áreas sem relatos de pirataria).
+            Fatores favoráveis à mitigação de riscos (ex.: condições climáticas estáveis, ausência de conflitos recentes).
+Recomendações
+Ações sugeridas para autoridades (ex.: aumentar patrulhas, monitorar navios específicos).
+Alertas prioritários para embarcações ou instalações.`
+    };
+
+    // Copiar prompts da seção Marítima
+    document.querySelectorAll('.prompt-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const promptText = promptsMaritimos[button.textContent] || promptsOperacionais[button.textContent];
+        if (promptText) {
+          navigator.clipboard.writeText(promptText);
+          alert(`Prompt copiado: ${button.textContent}`);
+        }
+      });
+    });
+</script>
+  <!-- Pop-up de atualização -->
+  <div id="update-popup">
+    <div class="popup-header">
+      <h2 class="popup-title">📢 Atualização Importante</h2>
+      <button class="close-btn" onclick="document.getElementById('update-popup').style.display = 'none'">×</button>
+    </div>
+    
+    <div class="update-badge">NOVO</div>
+    
+    <div class="update-content">
+      <p><strong>Página adicionada: Globo 🌍</strong></p>
+      <p><strong>Resumo:</strong></p>
+      <ol>
+        <li>Adicione pontos através das coordenadas ou clicando no globo;</li>
+        <li>Visualize os pontos marcados na lista à direita;</li>
+        <li>Use o botão "Traçar Rota" para conectar os pontos sequenciais;</li>
+        <li>Interaja com o globo girando e dando zoom para explorar diferentes regiões; e</li>
+        <li>Gerencie os pontos através das ações disponíveis na lista.</li>
+      </ol>
+      
+      <p>Esta ferramenta é ideal para educadores, viajantes, planejadores logísticos e qualquer pessoa interessada em explorar a geografia do nosso planeta de forma interativa e visualmente atraente.</p>
+      
+      <div class="suggestion">
+        <strong>Sugestões:</strong> campiao@marinha.mil.br
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Fechar o pop-up automaticamente após 20 segundos
+    setTimeout(function() {
+      document.getElementById('update-popup').style.display = 'none';
+    }, 20000);
+  </script>
+  
+  <!-- Rodapé -->
+  <div class="footer">
+    &copy; 2025 Central Marítima e Operacional | Todos os direitos reservados.
+  </div>
+</body>
+</html>

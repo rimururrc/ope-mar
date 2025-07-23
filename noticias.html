@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Notícias Marítimas</title>
+  <style>
+    body {
+      background: #000 url('veleiro1.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu-bar {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 15px 0;
+      background-color: rgba(20, 20, 20, 0.9);
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .menu-bar a {
+      color: white;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    .menu-bar a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 2rem;
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+      background-color: rgba(31, 31, 31, 0.7);
+      padding: 15px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    main {
+      flex: 1;
+      padding: 2rem 1rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      background-color: #1a1a1a;
+      color: #fff;
+      border: 1px solid #444;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+
+    article {
+      background-color: rgba(40, 40, 40, 0.85);
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      transition: background-color 0.3s;
+    }
+
+    article:hover {
+      background-color: rgba(50, 50, 50, 0.9);
+    }
+
+    article h3 {
+      margin: 0 0 10px 0;
+      font-size: 1.1rem;
+    }
+
+    article a {
+      color: #00d1ff;
+      text-decoration: none;
+    }
+
+    article a:hover {
+      text-decoration: underline;
+    }
+
+    small {
+      color: #aaa;
+      display: block;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #aaa;
+      background-color: rgba(20, 20, 20, 0.8);
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra de Menu -->
+  <div class="menu-bar">
+    <a href="prompts.html">Prompts</a>
+    <a href="como-usar.html">Como Usar</a>
+    <a href="ias.html">IAs</a>
+    <a href="sistemas.html">Sistemas</a>
+    <a href="noticias.html">Notícias</a>
+    <a href="globo.html">Globo</a>
+    <a href="linksuteis.html">Links Úteis</a>
+  </div>
+
+  <!-- Título -->
+  <h1>Últimas Notícias por País</h1>
+
+  <!-- Conteúdo Dinâmico -->
+  <main id="app">
+    <section id="inicio" class="page active">
+      <h2>Escolha um país para ver as últimas notícias:</h2>
+      <select id="countrySelect">
+        <option value="">Selecione um país</option>
+      </select>
+      <div id="newsFeed"></div>
+    </section>
+  </main>
+
+  <!-- Rodapé -->
+  <div class="footer">
+    &copy; 2025 Central Marítima e Operacional | Todos os direitos reservados.
+  </div>
+
+  <!-- Script para carregar países e notícias -->
+  <script>
+    // Carrega lista de países com feeds RSS
+    fetch('data/countries.json')
+      .then(res => res.json())
+      .then(data => {
+        const select = document.getElementById('countrySelect');
+        data.forEach(country => {
+          const opt = document.createElement('option');
+          opt.value = country.feed;
+          opt.textContent = country.name;
+          select.appendChild(opt);
+        });
+      });
+
+    // Quando usuário seleciona um país
+    document.getElementById('countrySelect').addEventListener('change', function () {
+      const feedUrl = this.value;
+      if (!feedUrl) return;
+
+      const newsContainer = document.getElementById('newsFeed');
+      newsContainer.innerHTML = '<p>Carregando notícias...</p>';
+
+      // Usa RSS2JSON API para buscar feed
+      fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`)
+        .then(res => res.json())
+        .then(data => {
+          newsContainer.innerHTML = '';
+          if (data.status !== 'ok') {
+            newsContainer.innerHTML = '<p>Erro ao carregar notícias.</p>';
+            return;
+          }
+
+          data.items.slice(0, 10).forEach(item => {
+            const article = document.createElement('article');
+            article.innerHTML = `
+              <h3><a href="${item.link}" target="_blank">${item.title}</a></h3>
+              <small>${new Date(item.pubDate).toLocaleString()}</small>
+              <p>${item.description.substring(0, 150)}...</p>
+            `;
+            newsContainer.appendChild(article);
+          });
+        })
+        .catch(err => {
+          console.error(err);
+          newsContainer.innerHTML = '<p>Não foi possível carregar as notícias.</p>';
+        });
+    });
+  </script>
+
+</body>
+</html>

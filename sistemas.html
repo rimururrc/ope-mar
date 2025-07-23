@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sistemas Úteis</title>
+  <style>
+    body {
+      background: #000 url('veleiro1.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Menu Superior */
+    .menu-bar {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 15px 0;
+      background-color: rgba(20, 20, 20, 0.9);
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .menu-bar a {
+      color: white;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    .menu-bar a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 2rem;
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+      background-color: rgba(31, 31, 31, 0.7);
+      padding: 15px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    a {
+      color: #00d1ff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #aaa;
+      background-color: rgba(20, 20, 20, 0.8);
+      margin-top: auto;
+    }
+
+    /* Estilos do conteúdo do index.html */
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background-color: rgba(40, 40, 40, 0.9);
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s, box-shadow 0.3s;
+      text-decoration: none;
+      color: white;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .card-title {
+      padding: 15px 15px 5px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .card-desc {
+      padding: 0 15px 15px;
+      font-size: 0.9rem;
+      color: #ccc;
+      flex-grow: 1;
+    }
+
+    .card-button {
+      background-color: rgba(0, 209, 255, 0.2);
+      color: #00d1ff;
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra de Menu -->
+  <div class="menu-bar">
+    <a href="prompts.html">Prompts</a>
+    <a href="como-usar.html">Como Usar</a>
+    <a href="ias.html">IAs</a>
+    <a href="sistemas.html">Sistemas</a>
+    <a href="noticias.html">Notícias</a>
+    <a href="globo.html">Globo</a>
+    <a href="linksuteis.html">Links Úteis</a>
+  </div>
+
+  <!-- Título -->
+  <h1>Bem-vindo as ferramentas do CRSM!</h1>
+
+  <!-- Conteúdo do index.html (sem sidebar) -->
+  <div class="container">
+    <a class="card" href="map.html">
+      <img class="card-image" src="img/thumbnail_map.png" alt="Mapa de Casos">
+      <div class="card-title">Mapa iterativo</div>
+      <div class="card-desc">Visualize situações diretamente no mapa de forma interativa.(em ajustes)</div>
+      <div class="card-button">Acessar</div>
+    </a>
+    <a class="card" href="calculadora-de-velocidade.html">
+      <img class="card-image" src="img/Tumbnail_velocidade_media.PNG" alt="Calculadora_VRLOCIDADE">
+      <div class="card-title">Calculadora de Velocidade</div>
+      <div class="card-desc">Calcule a Velocidade média realizada por uma embarcação apartir de 2 horarios e 1 distância navegada.</div>
+      <div class="card-button">Acessar</div>
+    </a>
+    <a class="card" href="calculadora-de-eta.html">
+      <img class="card-image" src="img/thumbnail_calculadora.png" alt="Calculadora">
+      <div class="card-title">Calculadora de ETA</div>
+      <div class="card-desc">Calcule a Data-Hora estimada de um contato após uma distância percorrida.</div>
+      <div class="card-button">Acessar</div>
+    </a>
+    <a class="card" href="consulta-mmsi.html">
+      <img class="card-image" src="img/thumbnail_mmsi.png" alt="Consulta MMSI">
+      <div class="card-title">Consultar bandeira (MMSI)</div>
+      <div class="card-desc">Identifique o país de origem a partir do código MMSI.</div>
+      <div class="card-button">Acessar</div>
+    </a>
+    <a class="card" href="conversor-gms-para-decimal.html">
+      <img class="card-image" src="img/thumbnail_gms.png" alt="Conversor LAT LONG(GMS)">
+      <div class="card-title">Conversor GMS >> DECIMAL</div>
+      <div class="card-desc">Converta coordenadas geográficas no formato gms para decimal.</div>
+      <div class="card-button">Acessar</div>
+    </a>
+    <a class="card" href="conversor-decimal-para-gms.html">
+      <img class="card-image" src="img/thumbnail_dec.png" alt="Conversor LAT LONG(DEC)">
+      <div class="card-title">Conversor DECIMAL >> GMS</div>
+      <div class="card-desc">Converta coordenadas geográficas no formato decimal para gms.</div>
+      <div class="card-button">Acessar</div>
+    </a>
+    <a class="card" href="conversor-preps-gov.html">
+      <img class="card-image" src="img/conversor01.png" alt="Conversor PREPS.GOV">
+      <div class="card-title">Conversor PREPS.GOV</div>
+      <div class="card-desc">Converta .TXT do preps.gov para uma planilha .XLSX</div>
+      <div class="card-button">Acessar</div>
+    </a>
+    <a class="card" href="distancia-entre-portos.html">
+      <img class="card-image" src="img/thumbnail_portos.png" alt="Calculadora de Portos">
+      <div class="card-title">Distancia e Tempo entre Portos</div>
+      <div class="card-desc">Calcule distância e tempo entre portos marítimos com rapidez.</div>
+      <div class="card-button">Acessar</div>
+    </a>
+    <a class="card" href="calculadora-de-interceptacao.html">
+      <img class="card-image" src="img/Thumbnail_interceptacao.png" alt="Interceptação">
+      <div class="card-title">Cálculo de Interceptação</div>
+      <div class="card-desc">Calcule o ponto de maior aproximação entre dois contatos marítimos.</div>
+      <div class="card-button">Acessar</div>
+    </a>
+    <a class="card" href="carregar-cenarios.html">
+      <img class="card-image" src="img/Thumbnail_cenarios.png" alt="Cenários de Rotas">
+      <div class="card-title">Carregamento de Cenários</div>
+      <div class="card-desc">Carregue planilhas com múltiplas abas para visualizar rotas simultâneas de contatos marítimos.</div>
+      <div class="card-button">Acessar</div>
+    </a>
+    <a class="card" href="formatador-de-mensagem.html">
+      <img class="card-image" src="img/Thumbnail_formulario.png" alt="Formatador de Mensagem">
+      <div class="card-title">Formatador de Mensagem</div>
+      <div class="card-desc">Preencha formulários padronizados para gerar mensagens táticas e exportar em .txt.</div>
+      <div class="card-button">Acessar</div>
+    </a>
+  </div>
+
+  <!-- Rodapé -->
+  <div class="footer">
+    &copy; 2025 Central Marítima e Operacional | Todos os direitos reservados.
+  </div>
+
+</body>
+</html>

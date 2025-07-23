@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lista de IAs</title>
+  <style>
+    body {
+      background: #000 url('veleiro1.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu-bar {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 15px 0;
+      background-color: rgba(20, 20, 20, 0.9);
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .menu-bar a {
+      color: white;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    .menu-bar a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 2rem;
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+      background-color: rgba(31, 31, 31, 0.7);
+      padding: 15px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    table {
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto 2rem;
+      border-collapse: collapse;
+      background-color: rgba(40, 40, 40, 0.9);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid #555;
+    }
+
+    th {
+      background-color: rgba(26, 26, 26, 0.95);
+      font-weight: bold;
+    }
+
+    tr:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    a {
+      color: #00d1ff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        margin-bottom: 1rem;
+        border: 1px solid #555;
+        border-radius: 8px;
+        padding: 10px;
+      }
+
+      td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px;
+        font-size: 0.95rem;
+      }
+
+      td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #ccc;
+      }
+    }
+
+    .footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #aaa;
+      background-color: rgba(20, 20, 20, 0.8);
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra de Menu -->
+  <div class="menu-bar">
+    <a href="prompts.html">Prompts</a>
+    <a href="como-usar.html">Como Usar</a>
+    <a href="ias.html">IAs</a>
+    <a href="sistemas.html">Sistemas</a>
+    <a href="noticias.html">Notícias</a>
+    <a href="globo.html">Globo</a>
+    <a href="linksuteis.html">Links Úteis</a>
+  </div>
+
+  <!-- Título -->
+  <h1>Lista de Inteligências Artificiais</h1>
+
+  <!-- Tabela Responsiva -->
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Categoria</th>
+        <th>Descrição</th>
+        <th>Acesso</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td data-label="Nome">Adobe Firefly</td>
+        <td data-label="Categoria">Design Gráfico</td>
+        <td data-label="Descrição">Recursos de IA para criação visual e edição de imagem.</td>
+        <td data-label="Acesso"><a href="https://firefly.adobe.com/?media=featured"  target="_blank">Acessar Firefly</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">AI Dungeon</td>
+        <td data-label="Categoria">Redação</td>
+        <td data-label="Descrição">Jogo de RPG gerado totalmente por IA.</td>
+        <td data-label="Acesso"><a href="https://play.aidungeon.io/"  target="_blank">Acessar AI Dungeon</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Anyword</td>
+        <td data-label="Categoria">Marketing</td>
+        <td data-label="Descrição">Produção de textos persuasivos para marketing.</td>
+        <td data-label="Acesso"><a href="https://anyword.com/"  target="_blank">Acessar Anyword</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">AskYourPDF</td>
+        <td data-label="Categoria">Documentos</td>
+        <td data-label="Descrição">Pergunte a documentos PDF e obtenha respostas.</td>
+        <td data-label="Acesso"><a href="https://askyourpdf.com/"  target="_blank">Acessar AskYourPDF</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Auto-GPT</td>
+        <td data-label="Categoria">Programação</td>
+        <td data-label="Descrição">Executa tarefas complexas sozinho usando GPT.</td>
+        <td data-label="Acesso"><a href="https://github.com/Significant-Gravitas/Auto-GPT"  target="_blank">Acessar Auto-GPT</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Bardeen</td>
+        <td data-label="Categoria">Automação</td>
+        <td data-label="Descrição">Automatiza tarefas repetitivas com IA.</td>
+        <td data-label="Acesso"><a href="https://bardeen.ai/"  target="_blank">Acessar Bardeen</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Beautiful AI</td>
+        <td data-label="Categoria">Apresentação</td>
+        <td data-label="Descrição">Cria apresentações incríveis automaticamente.</td>
+        <td data-label="Acesso"><a href="https://www.beautiful.ai/"  target="_blank">Acessar Beautiful AI</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">BlueWillow</td>
+        <td data-label="Categoria">Arte</td>
+        <td data-label="Descrição">Gerador de arte em Discord, rápido e acessível.</td>
+        <td data-label="Acesso"><a href="https://discord.gg/bluewillow"  target="_blank">Acessar BlueWillow</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Canva Magic Design</td>
+        <td data-label="Categoria">Design Gráfico</td>
+        <td data-label="Descrição">Gera designs prontos com base em texto ou tema.</td>
+        <td data-label="Acesso"><a href="https://www.canva.com/ai"  target="_blank">Acessar Canva AI</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">ChatGPT</td>
+        <td data-label="Categoria">Assistente</td>
+        <td data-label="Descrição">Um dos melhores assistentes de escrita e raciocínio.</td>
+        <td data-label="Acesso"><a href="https://chat.openai.com/"  target="_blank">Acessar ChatGPT</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Claude</td>
+        <td data-label="Categoria">Assistente</td>
+        <td data-label="Descrição">Excelente para análise profunda de texto e código.</td>
+        <td data-label="Acesso"><a href="https://claude.ai/"  target="_blank">Acessar Claude</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Codeium</td>
+        <td data-label="Categoria">Programação</td>
+        <td data-label="Descrição">Completar código e otimizar snippets rapidamente.</td>
+        <td data-label="Acesso"><a href="https://codeium.com/"  target="_blank">Acessar Codeium</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Copy.ai</td>
+        <td data-label="Categoria">Marketing</td>
+        <td data-label="Descrição">Criação rápida de anúncios, e-mails e campanhas.</td>
+        <td data-label="Acesso"><a href="https://copy.ai/"  target="_blank">Acessar Copy.ai</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">CopyMatic</td>
+        <td data-label="Categoria">Redação</td>
+        <td data-label="Descrição">Escreve artigos, descrições e roteiros.</td>
+        <td data-label="Acesso"><a href="https://copymatic.ai/"  target="_blank">Acessar CopyMatic</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Cursor</td>
+        <td data-label="Categoria">Programação</td>
+        <td data-label="Descrição">Editor de código com IA que entende o contexto.</td>
+        <td data-label="Acesso"><a href="https://cursor.sh/"  target="_blank">Acessar Cursor</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">DeepAI</td>
+        <td data-label="Categoria">Arte</td>
+        <td data-label="Descrição">Gerador de arte baseado em texto simples.</td>
+        <td data-label="Acesso"><a href="https://deepai.org/"  target="_blank">Acessar DeepAI</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">DeepSeekAI</td>
+        <td data-label="Categoria">Programação</td>
+        <td data-label="Descrição">Assistente para codificação, criação, leitura e muito mais.</td>
+        <td data-label="Acesso"><a href="https://chat.deepseek.com/"  target="_blank">Acessar DeepAI</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">ElevenLabs</td>
+        <td data-label="Categoria">Voz</td>
+        <td data-label="Descrição">Gera vozes realistas a partir de texto.</td>
+        <td data-label="Acesso"><a href="https://elevenlabs.io/"  target="_blank">Acessar ElevenLabs</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Galileo AI</td>
+        <td data-label="Categoria">Design UI</td>
+        <td data-label="Descrição">Transforma texto em layout de interface do usuário.</td>
+        <td data-label="Acesso"><a href="https://stitch.withgoogle.com/"  target="_blank">Acessar Galileo AI</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Getimg.ai</td>
+        <td data-label="Categoria">Arte</td>
+        <td data-label="Descrição">Crie e edite imagens com IA.</td>
+        <td data-label="Acesso"><a href="https://getimg.ai/"  target="_blank">Acessar Getimg.ai</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">GitMind</td>
+        <td data-label="Categoria">Produtividade</td>
+        <td data-label="Descrição">Cria mapas mentais e fluxogramas com IA.</td>
+        <td data-label="Acesso"><a href="https://gitmind.com/"  target="_blank">Acessar GitMind</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">HeyGen</td>
+        <td data-label="Categoria">Vídeo</td>
+        <td data-label="Descrição">Cria vídeos personalizados com avatares falantes.</td>
+        <td data-label="Acesso"><a href="https://www.heygen.com/"  target="_blank">Acessar HeyGen</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">ImageFX</td>
+        <td data-label="Categoria">Arte</td>
+        <td data-label="Descrição">Ferramenta experimental do Google para geração de imagens.</td>
+        <td data-label="Acesso"><a href="https://deepmind.google/models/imagen/"  target="_blank">Acessar ImageFX</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">InVideo AI</td>
+        <td data-label="Categoria">Vídeo</td>
+        <td data-label="Descrição">Cria vídeos com IA a partir de texto.</td>
+        <td data-label="Acesso"><a href="https://invideo.io/"  target="_blank">Acessar InVideo</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Leonardo AI</td>
+        <td data-label="Categoria">Arte</td>
+        <td data-label="Descrição">Cria arte digital, personagens e ambientes.</td>
+        <td data-label="Acesso"><a href="https://leonardo.ai/"  target="_blank">Acessar Leonardo AI</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Midjourney</td>
+        <td data-label="Categoria">Arte</td>
+        <td data-label="Descrição">Gera imagens realistas a partir de prompts textuais.</td>
+        <td data-label="Acesso"><a href="https://www.midjourney.com/"  target="_blank">Acessar Midjourney</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Notion AI</td>
+        <td data-label="Categoria">Produtividade</td>
+        <td data-label="Descrição">Integração de IA para tarefas e gestão de projetos.</td>
+        <td data-label="Acesso"><a href="https://www.notion.so/product/ai"  target="_blank">Acessar Notion AI</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Opus Pro</td>
+        <td data-label="Categoria">Edição de Áudio</td>
+        <td data-label="Descrição">Editor de áudio baseado em IA.</td>
+        <td data-label="Acesso"><a href="https://opus.pro/"  target="_blank">Acessar Opus Pro</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Perplexity AI</td>
+        <td data-label="Categoria">Pesquisa</td>
+        <td data-label="Descrição">Busca informações atualizadas na web com IA.</td>
+        <td data-label="Acesso"><a href="https://www.perplexity.ai/"  target="_blank">Acessar Perplexity</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Photosonic</td>
+        <td data-label="Categoria">Arte</td>
+        <td data-label="Descrição">Cria imagens com base em palavras-chave.</td>
+        <td data-label="Acesso"><a href="https://photosonic.com/"  target="_blank">Acessar Photosonic</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">PlayHT</td>
+        <td data-label="Categoria">Voz</td>
+        <td data-label="Descrição">Converte texto em voz realista em minutos.</td>
+        <td data-label="Acesso"><a href="https://play.ht/"  target="_blank">Acessar PlayHT</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Qwen</td>
+        <td data-label="Categoria">Criação</td>
+        <td data-label="Descrição">Ideal para textos criativos, histórias, scripts e redação.</td>
+        <td data-label="Acesso"><a href="https://chat.qwen.ai/"  target="_blank">Acessar Qwen</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Runway ML</td>
+        <td data-label="Categoria">Vídeo</td>
+        <td data-label="Descrição">Ferramentas de edição de vídeo com IA.</td>
+        <td data-label="Acesso"><a href="https://runwayml.com/"  target="_blank">Acessar Runway ML</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Stockimg AI</td>
+        <td data-label="Categoria">Arte</td>
+        <td data-label="Descrição">Cria imagens em alta qualidade para sites e redes sociais.</td>
+        <td data-label="Acesso"><a href="https://stockimg.ai/"  target="_blank">Acessar Stockimg AI</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Stable Diffusion</td>
+        <td data-label="Categoria">Arte / Imagem</td>
+        <td data-label="Descrição">Ferramenta open-source para geração de imagens.</td>
+        <td data-label="Acesso"><a href="https://stablediffusionweb.com/"  target="_blank">Acessar Stable Diffusion</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Tabnine</td>
+        <td data-label="Categoria">Programação</td>
+        <td data-label="Descrição">Autocompletar inteligente para código.</td>
+        <td data-label="Acesso"><a href="https://www.tabnine.com/"  target="_blank">Acessar Tabnine</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Tome</td>
+        <td data-label="Categoria">Apresentação</td>
+        <td data-label="Descrição">Cria apresentações interativas com IA.</td>
+        <td data-label="Acesso"><a href="https://www.tome.app/"  target="_blank">Acessar Tome</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Windy</td>
+        <td data-label="Categoria">Clima</td>
+        <td data-label="Descrição">Previsão meteorológica com IA e mapas interativos.</td>
+        <td data-label="Acesso"><a href="https://www.windy.com/"  target="_blank">Acessar Windy</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">You.com</td>
+        <td data-label="Categoria">Pesquisa</td>
+        <td data-label="Descrição">Mecanismo de busca privado com IA integrada.</td>
+        <td data-label="Acesso"><a href="https://you.com/"  target="_blank">Acessar You.com</a></td>
+      </tr>
+      <tr>
+        <td data-label="Nome">Youware</td>
+        <td data-label="Categoria">Criação</td>
+        <td data-label="Descrição">Mecanismo de criação com IA integrada.</td>
+        <td data-label="Acesso"><a href="https://www.youware.com/"  target="_blank">Acessar Youware</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Rodapé -->
+  <div class="footer">
+    &copy; 2025 Central Marítima e Operacional | Todos os direitos reservados.
+  </div>
+
+</body>
+</html>

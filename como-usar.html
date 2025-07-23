@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Como Usar</title>
+  <style>
+    body {
+      background: #000 url('veleiro1.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 2rem;
+    }
+
+    .menu-bar {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 15px 0;
+      background-color: rgba(20, 20, 20, 0.9);
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .menu-bar a {
+      color: white;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    .menu-bar a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+      background-color: rgba(31, 31, 31, 0.7);
+      padding: 10px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    .section {
+      max-width: 800px;
+      margin: 2rem auto;
+      background-color: rgba(40, 40, 40, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      line-height: 1.6;
+    }
+
+    .section h2 {
+      margin-top: 0;
+      font-size: 1.4rem;
+      color: #00d1ff;
+    }
+
+    .section ol {
+      padding-left: 20px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #aaa;
+      background-color: rgba(20, 20, 20, 0.8);
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Menu Superior -->
+  <div class="menu-bar">
+    <a href="prompts.html">Prompts</a>
+    <a href="como-usar.html">Como Usar</a>
+    <a href="ias.html">IAs</a>
+    <a href="sistemas.html">Sistemas</a>
+    <a href="noticias.html">Notícias</a>
+    <a href="globo.html">Globo</a>
+    <a href="linksuteis.html">Links Úteis</a>
+  </div>
+
+  <!-- Título -->
+  <div style="display: flex; justify-content: center; align-items: center; flex-direction: column; height: 15vh; text-align: center;">
+  <h1>Como utilizar os Prompts</h1>
+  </div>
+
+  <!-- Seção Geral -->
+  <div class="section">
+    <h2>1. Prompts Gerais</h2>
+    <p>São usados para obter informações sobre temas marítimos e operacionais recentes (última semana).</p>
+    <ol>
+      <li>Clique em um botão de tema (ex: "Amazônia Azul", "Pirataria", "Meteorologia").</li>
+      <li>O sistema copiará automaticamente o texto completo do prompt.</li>
+      <li>Acesse uma das IAs listadas (ChatGPT, Gemini, etc.).</li>
+      <li>Cole o prompt e envie.</li>
+      <li>A IA retornará notícias e dados atualizados sobre aquele tema.</li>
+    </ol>
+  </div>
+
+  <!-- Seção Específica -->
+  <div class="section">
+    <h2>2. Prompts Específicos</h2>
+    <p>São usados quando você precisa de informações detalhadas sobre datas e localidades definidas por você.</p>
+    <p><strong>Exemplos:</strong> Botões "Comissões" (Marítimo) e "Pesquisa Operacional" (Operacional)</p> 
+    <p>* Esses prompts deverão ser utilizados somente nos respectivos botões "Com-Grok e Com-Perplexity" para Marítima e "P.O.-Grok e P.O.-Perplexity" para Operacional. *</p>
+    <ol>
+      <li>Clique no botão desejado.</li>
+      <li>Cole o prompt em uma IA.</li>
+      <li>Antes de enviar, substitua as partes entre colchetes:</li>
+      <ul>
+        <li>[inserir datas]</li>
+        <li>[inserir nome do porto ou cidade]</li>
+      </ul>
+      <li>Envie o prompt personalizado.</li>
+      <li>A IA fará uma análise estratégica baseada nas suas necessidades.</li>
+    </ol>
+  </div>
+
+  
+  <!-- Rodapé -->
+  <div class="footer">
+    &copy; 2025 Central Marítima e Operacional | Todos os direitos reservados.
+  </div>
+
+  
+</body>
+</html>
