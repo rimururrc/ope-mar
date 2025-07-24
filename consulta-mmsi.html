@@ -1,9 +1,11 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Consulta de País pelo MMSI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Consulta MMSI</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     body {
       background: #000 url('veleiro1.png') no-repeat center center fixed;
@@ -17,6 +19,7 @@
       flex-direction: column;
     }
 
+    /* Menu Superior */
     .menu-bar {
       display: flex;
       justify-content: center;
@@ -52,12 +55,13 @@
       display: inline-block;
     }
 
-    .content {
-      padding: 20px;
-      max-width: 700px;
-      margin: 0 auto;
-      background-color: rgba(0,0,0,0.6);
-      border-radius: 10px;
+    a {
+      color: #00d1ff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
     }
 
     .footer {
@@ -69,20 +73,78 @@
       margin-top: auto;
     }
 
-    .calculator-container {
+    /* Conteúdo Principal */
+    .content-container {
+      max-width: 800px;
       margin: 0 auto;
-      padding: 10px;
-      background: white;
-      color: black;
+      padding: 20px;
+      background-color: rgba(40, 40, 40, 0.9);
       border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      margin-bottom: 2rem;
+      width: 90%;
+    }
+
+    .calculator-container {
+      padding: 20px;
+    }
+
+    .calculator-container h1, .calculator-container h2 {
+      color: #00d1ff;
+      text-align: center;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .input-container {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    input[type="number"] {
+      padding: 10px;
+      border: 1px solid #00d1ff;
+      border-radius: 4px;
+      background-color: rgba(60, 60, 60, 0.8);
+      color: white;
+      width: 200px;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #06d157;
     }
 
     .flag-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1px;
+      gap: 10px;
+      margin-top: 20px;
     }
 
     .flag-display {
@@ -92,6 +154,14 @@
       object-fit: contain;
       background-color: #ffffff;
       padding: 5px;
+      border: 1px solid #00d1ff;
+      border-radius: 4px;
+    }
+
+    .separator {
+      margin: 20px 0;
+      height: 1px;
+      background-color: rgba(255, 255, 255, 0.2);
     }
 
     .vertical-pole {
@@ -104,29 +174,64 @@
     .vertical-pole::before {
       content: "";
       position: absolute;
-      left: -5px;
+      left: 50%;
       width: 4px;
       height: 100%;
-      background: linear-gradient(to bottom, var(--primary-color), #f0f0f0);
+      background: linear-gradient(to bottom, #00d1ff, #f0f0f0);
       transform: translateX(-50%);
-      display: none;
     }
 
-    .vertical-pole.show::before {
-      display: block;
+    .result-text {
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 10px;
     }
 
-    #bandeira {
-      position: relative;
-      z-index: 2;
-      border: 1px solid #fff;
-      border-radius: 4px;
-      background: white;
+    .instructions {
+      background-color: rgba(60, 60, 60, 0.8);
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .instructions h3 {
+      color: #00d1ff;
+      margin-top: 0;
+    }
+
+    .instructions ul {
+      padding-left: 20px;
+    }
+
+    .instructions li {
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .menu-bar {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      
+      .content-container {
+        width: 95%;
+        padding: 10px;
+      }
+      
+      .input-container {
+        flex-direction: column;
+      }
+      
+      input[type="number"] {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
 
+  <!-- Barra de Menu -->
   <div class="menu-bar">
     <a href="prompts.html">Prompts</a>
     <a href="como-usar.html">Como Usar</a>
@@ -134,40 +239,386 @@
     <a href="sistemas.html">Sistemas</a>
     <a href="noticias.html">Notícias</a>
     <a href="globo.html">Globo</a>
-    <a href="linksuteis.html">Links úteis</a>
+    <a href="linksuteis.html">Links Úteis</a>
   </div>
 
-  <h1>Consulta de País pelo MMSI</h1>
+  <!-- Título -->
+  <h1>Consulta de Bandeira por MMSI</h1>
 
-  <div class="content">
+  <!-- Conteúdo Principal -->
+  <div class="content-container">
     <div class="calculator-container">
-      <h3 style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-        <i class="fas fa-search"></i>
-        Digite os 3 primeiros dígitos do MMSI
-      </h3>
-      <input type="number" id="mmsiInput" placeholder="Ex: 710 (Brasil)" oninput="consultarPais()" maxlength="3" style="width: 80%; margin-top: 10px; height: 30px;">
-      <button onclick="document.getElementById('mmsiInput').value = ''; consultarPais();" style="padding: 5px 5px; background: #f0f0f0; border: none; border-radius: 5px; cursor: pointer;">
-        <i class="fas fa-times"></i> Limpar
-      </button>
+      <div class="instructions">
+        <h3>Instruções:</h3>
+        <ul>
+          <li>Digite os 3 primeiros dígitos do código MMSI no campo abaixo</li>
+          <li>O sistema identificará automaticamente o país de origem</li>
+          <li>A bandeira do país será exibida ao lado do nome do país</li>
+        </ul>
+      </div>
+
+      <div class="input-group">
+        <label for="mmsiInput">Digite os 3 primeiros dígitos do MMSI:</label>
+        <div class="input-container">
+          <input type="number" id="mmsiInput" placeholder="Ex: 710 (Brasil)" oninput="consultarPais()" maxlength="3">
+          <button onclick="document.getElementById('mmsiInput').value = ''; consultarPais();">
+            <i class="fas fa-times"></i> Limpar
+          </button>
+        </div>
+      </div>
+
       <div class="flag-container">
-        <div style="margin-top:10px" id="resultado2"></div>
+        <div id="resultado2"></div>
         <div class="separator vertical-pole" style="display: none;">
           <a id="flag-link" href="#">
-            <img id="bandeira" src="" alt="Bandeira" style="max-width: 120px; display: none;">
+            <img id="flag-image" class="flag-display" src="" alt="Bandeira do País" style="display: none;">
           </a>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Rodapé -->
   <div class="footer">
     &copy; 2025 Central Marítima e Operacional | Todos os direitos reservados.
   </div>
 
   <script>
-    // Função consultarPais permanece inalterada
-    " + document.querySelector('script')?.innerHTML + "
+    // Banco de dados de países por código MMSI
+    const mmsiDatabase = {
+      "201": { nome: "Albânia", bandeira: "al" },
+      "202": { nome: "Andorra", bandeira: "ad" },
+      "203": { nome: "Áustria", bandeira: "at" },
+      "204": { nome: "Portugal", bandeira: "pt" },
+      "205": { nome: "Bélgica", bandeira: "be" },
+      "206": { nome: "Bielorrússia", bandeira: "by" },
+      "207": { nome: "Bulgária", bandeira: "bg" },
+      "208": { nome: "Vaticano", bandeira: "va" },
+      "209": { nome: "Chipre", bandeira: "cy" },
+      "210": { nome: "Chipre", bandeira: "cy" },
+      "211": { nome: "Alemanha", bandeira: "de" },
+      "212": { nome: "Chipre", bandeira: "cy" },
+      "213": { nome: "Geórgia", bandeira: "ge" },
+      "214": { nome: "Moldávia", bandeira: "md" },
+      "215": { nome: "Malta", bandeira: "mt" },
+      "216": { nome: "Armênia", bandeira: "am" },
+      "218": { nome: "Alemanha", bandeira: "de" },
+      "219": { nome: "Dinamarca", bandeira: "dk" },
+      "220": { nome: "Dinamarca", bandeira: "dk" },
+      "224": { nome: "Espanha", bandeira: "es" },
+      "225": { nome: "Espanha", bandeira: "es" },
+      "226": { nome: "França", bandeira: "fr" },
+      "227": { nome: "França", bandeira: "fr" },
+      "228": { nome: "França", bandeira: "fr" },
+      "229": { nome: "Malta", bandeira: "mt" },
+      "230": { nome: "Finlândia", bandeira: "fi" },
+      "231": { nome: "Faroe Islands", bandeira: "fo" },
+      "232": { nome: "Reino Unido", bandeira: "gb" },
+      "233": { nome: "Reino Unido", bandeira: "gb" },
+      "234": { nome: "Reino Unido", bandeira: "gb" },
+      "235": { nome: "Reino Unido", bandeira: "gb" },
+      "236": { nome: "Gibraltar", bandeira: "gi" },
+      "237": { nome: "Grécia", bandeira: "gr" },
+      "238": { nome: "Croácia", bandeira: "hr" },
+      "239": { nome: "Grécia", bandeira: "gr" },
+      "240": { nome: "Grécia", bandeira: "gr" },
+      "241": { nome: "Grécia", bandeira: "gr" },
+      "242": { nome: "Marrocos", bandeira: "ma" },
+      "243": { nome: "Hungria", bandeira: "hu" },
+      "244": { nome: "Países Baixos", bandeira: "nl" },
+      "245": { nome: "Países Baixos", bandeira: "nl" },
+      "246": { nome: "Países Baixos", bandeira: "nl" },
+      "247": { nome: "Itália", bandeira: "it" },
+      "248": { nome: "Malta", bandeira: "mt" },
+      "249": { nome: "Malta", bandeira: "mt" },
+      "250": { nome: "Irlanda", bandeira: "ie" },
+      "251": { nome: "Islândia", bandeira: "is" },
+      "252": { nome: "Liechtenstein", bandeira: "li" },
+      "253": { nome: "Luxemburgo", bandeira: "lu" },
+      "254": { nome: "Mônaco", bandeira: "mc" },
+      "255": { nome: "Portugal", bandeira: "pt" },
+      "256": { nome: "Noruega", bandeira: "no" },
+      "257": { nome: "Noruega", bandeira: "no" },
+      "258": { nome: "Noruega", bandeira: "no" },
+      "259": { nome: "Noruega", bandeira: "no" },
+      "261": { nome: "Polônia", bandeira: "pl" },
+      "262": { nome: "Montenegro", bandeira: "me" },
+      "263": { nome: "Portugal", bandeira: "pt" },
+      "264": { nome: "Romênia", bandeira: "ro" },
+      "265": { nome: "Suécia", bandeira: "se" },
+      "266": { nome: "Suécia", bandeira: "se" },
+      "267": { nome: "Eslováquia", bandeira: "sk" },
+      "268": { nome: "San Marino", bandeira: "sm" },
+      "269": { nome: "Suíça", bandeira: "ch" },
+      "270": { nome: "República Tcheca", bandeira: "cz" },
+      "271": { nome: "Turquia", bandeira: "tr" },
+      "272": { nome: "Ucrânia", bandeira: "ua" },
+      "273": { nome: "Macedônia do Norte", bandeira: "mk" },
+      "274": { nome: "Macedônia do Norte", bandeira: "mk" },
+      "275": { nome: "Letónia", bandeira: "lv" },
+      "276": { nome: "Estônia", bandeira: "ee" },
+      "277": { nome: "Lituânia", bandeira: "lt" },
+      "278": { nome: "Eslovênia", bandeira: "si" },
+      "279": { nome: "Sérvia", bandeira: "rs" },
+      "301": { nome: "Anguilla", bandeira: "ai" },
+      "303": { nome: "Estados Unidos da América", bandeira: "us" },
+      "304": { nome: "Antígua e Barbuda", bandeira: "ag" },
+      "305": { nome: "Antígua e Barbuda", bandeira: "ag" },
+      "306": { nome: "Holanda", bandeira: "nl" },
+      "307": { nome: "Holanda", bandeira: "nl" },
+      "308": { nome: "Aruba", bandeira: "aw" },
+      "309": { nome: "Bahamas", bandeira: "bs" },
+      "310": { nome: "Bahamas", bandeira: "bs" },
+      "311": { nome: "Bahamas", bandeira: "bs" },
+      "312": { nome: "Belize", bandeira: "bz" },
+      "314": { nome: "Barbados", bandeira: "bb" },
+      "316": { nome: "Canadá", bandeira: "ca" },
+      "319": { nome: "Ilhas Cayman", bandeira: "ky" },
+      "321": { nome: "Costa Rica", bandeira: "cr" },
+      "323": { nome: "Cuba", bandeira: "cu" },
+      "325": { nome: "Dominica", bandeira: "dm" },
+      "327": { nome: "República Dominicana", bandeira: "do" },
+      "329": { nome: "França", bandeira: "fr" },
+      "330": { nome: "Granada", bandeira: "gd" },
+      "331": { nome: "Dinamarca", bandeira: "dk" },
+      "332": { nome: "Guatemala", bandeira: "gt" },
+      "334": { nome: "Honduras", bandeira: "hn" },
+      "336": { nome: "Haiti", bandeira: "ht" },
+      "338": { nome: "Estados Unidos da América", bandeira: "us" },
+      "339": { nome: "Jamaica", bandeira: "jm" },
+      "341": { nome: "São Cristóvão e Neves", bandeira: "kn" },
+      "343": { nome: "Santa Lúcia", bandeira: "lc" },
+      "345": { nome: "México", bandeira: "mx" },
+      "347": { nome: "França", bandeira: "fr" },
+      "350": { nome: "Nicarágua", bandeira: "ni" },
+      "351": { nome: "Panamá", bandeira: "pa" },
+      "352": { nome: "Panamá", bandeira: "pa" },
+      "353": { nome: "Panamá", bandeira: "pa" },
+      "354": { nome: "Panamá", bandeira: "pa" },
+      "355": { nome: "Panamá", bandeira: "pa" },
+      "356": { nome: "Panamá", bandeira: "pa" },
+      "357": { nome: "Panamá", bandeira: "pa" },
+      "358": { nome: "Puerto Rico", bandeira: "pr" },
+      "359": { nome: "El Salvador", bandeira: "sv" },
+      "361": { nome: "Trinidad e Tobago", bandeira: "tt" },
+      "362": { nome: "Trinidad e Tobago", bandeira: "tt" },
+      "364": { nome: "Ilhas Virgens Britânicas", bandeira: "vg" },
+      "366": { nome: "Estados Unidos da América", bandeira: "us" },
+      "367": { nome: "Estados Unidos da América", bandeira: "us" },
+      "368": { nome: "Estados Unidos da América", bandeira: "us" },
+      "369": { nome: "Estados Unidos da América", bandeira: "us" },
+      "370": { nome: "Uruguai", bandeira: "uy" },
+      "371": { nome: "Venezuela", bandeira: "ve" },
+      "372": { nome: "Panamá", bandeira: "pa" },
+      "373": { nome: "Panamá", bandeira: "pa" },
+      "374": { nome: "Panamá", bandeira: "pa" },
+      "375": { nome: "São Vicente e Granadinas", bandeira: "vc" },
+      "376": { nome: "São Vicente e Granadinas", bandeira: "vc" },
+      "377": { nome: "São Vicente e Granadinas", bandeira: "vc" },
+      "378": { nome: "Reino Unido", bandeira: "gb" },
+      "379": { nome: "Estados Unidos da América", bandeira: "us" },
+      "401": { nome: "Afeganistão", bandeira: "af" },
+      "403": { nome: "Arábia Saudita", bandeira: "sa" },
+      "405": { nome: "Bangladesh", bandeira: "bd" },
+      "408": { nome: "Bahrein", bandeira: "bh" },
+      "410": { nome: "Bhutan", bandeira: "bt" },
+      "412": { nome: "China", bandeira: "cn" },
+      "413": { nome: "China", bandeira: "cn" },
+      "414": { nome: "China", bandeira: "cn" },
+      "416": { nome: "Taiwan", bandeira: "tw" },
+      "417": { nome: "Sri Lanka", bandeira: "lk" },
+      "419": { nome: "Índia", bandeira: "in" },
+      "422": { nome: "Irã", bandeira: "ir" },
+      "423": { nome: "Azerbaijão", bandeira: "az" },
+      "425": { nome: "Iraque", bandeira: "iq" },
+      "428": { nome: "Israel", bandeira: "il" },
+      "431": { nome: "Japão", bandeira: "jp" },
+      "432": { nome: "Japão", bandeira: "jp" },
+      "434": { nome: "Turcomenistão", bandeira: "tm" },
+      "436": { nome: "Cazaquistão", bandeira: "kz" },
+      "437": { nome: "Uzbequistão", bandeira: "uz" },
+      "438": { nome: "Jordânia", bandeira: "jo" },
+      "440": { nome: "Coreia do Sul", bandeira: "kr" },
+      "441": { nome: "Coreia do Sul", bandeira: "kr" },
+      "443": { nome: "Palestina", bandeira: "ps" },
+      "445": { nome: "República Democrática Popular da Lao", bandeira: "la" },
+      "447": { nome: "Líbano", bandeira: "lb" },
+      "450": { nome: "Quirguistão", bandeira: "kg" },
+      "451": { nome: "Macau", bandeira: "mo" },
+      "453": { nome: "Maldivas", bandeira: "mv" },
+      "455": { nome: "Mongólia", bandeira: "mn" },
+      "457": { nome: "Nepal", bandeira: "np" },
+      "459": { nome: "Omã", bandeira: "om" },
+      "461": { nome: "Paquistão", bandeira: "pk" },
+      "463": { nome: "Qatar", bandeira: "qa" },
+      "466": { nome: "Síria", bandeira: "sy" },
+      "468": { nome: "Tailândia", bandeira: "th" },
+      "470": { nome: "Emirados Árabes Unidos", bandeira: "ae" },
+      "472": { nome: "Vietnã", bandeira: "vn" },
+      "473": { nome: "Iêmen", bandeira: "ye" },
+      "475": { nome: "Iêmen", bandeira: "ye" },
+      "477": { nome: "Hong Kong", bandeira: "hk" },
+      "478": { nome: "Bosnia e Herzegovina", bandeira: "ba" },
+      "501": { nome: "Adelie Land", bandeira: "tf" },
+      "503": { nome: "Austrália", bandeira: "au" },
+      "506": { nome: "Myanmar", bandeira: "mm" },
+      "508": { nome: "Brunei", bandeira: "bn" },
+      "510": { nome: "Micronésia", bandeira: "fm" },
+      "511": { nome: "Palau", bandeira: "pw" },
+      "512": { nome: "Nova Zelândia", bandeira: "nz" },
+      "514": { nome: "Cambodja", bandeira: "kh" },
+      "515": { nome: "Camboja", bandeira: "kh" },
+      "516": { nome: "China", bandeira: "cn" },
+      "518": { nome: "Cook Islands", bandeira: "ck" },
+      "520": { nome: "Fiji", bandeira: "fj" },
+      "523": { nome: "Cocos (Keeling) Islands", bandeira: "cc" },
+      "525": { nome: "Indonésia", bandeira: "id" },
+      "529": { nome: "Kiribati", bandeira: "ki" },
+      "531": { nome: "Laos", bandeira: "la" },
+      "533": { nome: "Malásia", bandeira: "my" },
+      "536": { nome: "Ilhas Marianas do Norte", bandeira: "mp" },
+      "538": { nome: "Marshall Islands", bandeira: "mh" },
+      "540": { nome: "Nova Caledônia", bandeira: "nc" },
+      "542": { nome: "Niue", bandeira: "nu" },
+      "544": { nome: "Nauru", bandeira: "nr" },
+      "546": { nome: "Polinésia Francesa", bandeira: "pf" },
+      "548": { nome: "Filipinas", bandeira: "ph" },
+      "553": { nome: "Papua Nova Guiné", bandeira: "pg" },
+      "555": { nome: "Ilhas Pitcairn", bandeira: "pn" },
+      "557": { nome: "Ilhas Salomão", bandeira: "sb" },
+      "559": { nome: "Samoa Americana", bandeira: "as" },
+      "561": { nome: "Samoa", bandeira: "ws" },
+      "563": { nome: "Singapura", bandeira: "sg" },
+      "564": { nome: "Singapura", bandeira: "sg" },
+      "565": { nome: "Singapura", bandeira: "sg" },
+      "566": { nome: "Singapura", bandeira: "sg" },
+      "567": { nome: "Tailândia", bandeira: "th" },
+      "570": { nome: "Tonga", bandeira: "to" },
+      "572": { nome: "Tuvalu", bandeira: "tv" },
+      "574": { nome: "Ilhas Menores Distantes dos Estados Unidos", bandeira: "um" },
+      "576": { nome: "Vanuatu", bandeira: "vu" },
+      "577": { nome: "Vanuatu", bandeira: "vu" },
+      "578": { nome: "Vietnã", bandeira: "vn" },
+      "601": { nome: "África do Sul", bandeira: "za" },
+      "603": { nome: "Angola", bandeira: "ao" },
+      "605": { nome: "Argélia", bandeira: "dz" },
+      "607": { nome: "Ilhas Saint Paul e Amsterdam", bandeira: "tf" },
+      "608": { nome: "Ascension Island", bandeira: "sh" },
+      "609": { nome: "Burundi", bandeira: "bi" },
+      "610": { nome: "Benin", bandeira: "bj" },
+      "611": { nome: "Botswana", bandeira: "bw" },
+      "612": { nome: "República Centro-Africana", bandeira: "cf" },
+      "613": { nome: "Camarões", bandeira: "cm" },
+      "615": { nome: "Cabo Verde", bandeira: "cv" },
+      "616": { nome: "Comores", bandeira: "km" },
+      "617": { nome: "Ilhas Comores", bandeira: "km" },
+      "618": { nome: "Costa do Marfim", bandeira: "ci" },
+      "619": { nome: "Costa do Marfim", bandeira: "ci" },
+      "620": { nome: "Djibouti", bandeira: "dj" },
+      "621": { nome: "Egito", bandeira: "eg" },
+      "622": { nome: "Eritreia", bandeira: "er" },
+      "624": { nome: "Etiópia", bandeira: "et" },
+      "625": { nome: "Ilhas Europa", bandeira: "tf" },
+      "626": { nome: "Gabão", bandeira: "ga" },
+      "627": { nome: "Gâmbia", bandeira: "gm" },
+      "629": { nome: "Gana", bandeira: "gh" },
+      "630": { nome: "Gibraltar", bandeira: "gi" },
+      "631": { nome: "Guiné-Bissau", bandeira: "gw" },
+      "632": { nome: "Guiné Equatorial", bandeira: "gq" },
+      "633": { nome: "Grécia", bandeira: "gr" },
+      "634": { nome: "Guiné", bandeira: "gn" },
+      "635": { nome: "França", bandeira: "fr" },
+      "636": { nome: "Libéria", bandeira: "lr" },
+      "637": { nome: "Libéria", bandeira: "lr" },
+      "638": { nome: "Sudão do Sul", bandeira: "ss" },
+      "642": { nome: "Líbia", bandeira: "ly" },
+      "644": { nome: "Lesoto", bandeira: "ls" },
+      "645": { nome: "Maurício", bandeira: "mu" },
+      "647": { nome: "Madagáscar", bandeira: "mg" },
+      "649": { nome: "Mali", bandeira: "ml" },
+      "650": { nome: "Moçambique", bandeira: "mz" },
+      "654": { nome: "Mauritânia", bandeira: "mr" },
+      "655": { nome: "Maláui", bandeira: "mw" },
+      "656": { nome: "Níger", bandeira: "ne" },
+      "657": { nome: "Nigéria", bandeira: "ng" },
+      "659": { nome: "Namíbia", bandeira: "na" },
+      "660": { nome: "Reunião", bandeira: "re" },
+      "661": { nome: "Ruanda", bandeira: "rw" },
+      "662": { nome: "Sudão", bandeira: "sd" },
+      "663": { nome: "Senegal", bandeira: "sn" },
+      "664": { nome: "Serra Leoa", bandeira: "sl" },
+      "665": { nome: "São Tomé e Príncipe", bandeira: "st" },
+      "666": { nome: "Eswatini", bandeira: "sz" },
+      "667": { nome: "Chade", bandeira: "td" },
+      "668": { nome: "Togo", bandeira: "tg" },
+      "669": { nome: "Tunísia", bandeira: "tn" },
+      "670": { nome: "Tanzânia", bandeira: "tz" },
+      "671": { nome: "Uganda", bandeira: "ug" },
+      "672": { nome: "República Democrática do Congo", bandeira: "cd" },
+      "674": { nome: "Zâmbia", bandeira: "zm" },
+      "675": { nome: "Zimbabwe", bandeira: "zw" },
+      "676": { nome: "Zimbabwe", bandeira: "zw" },
+      "677": { nome: "Ilhas Crozet", bandeira: "tf" },
+      "678": { nome: "Ilhas Kerguelen", bandeira: "tf" },
+      "679": { nome: "Mayotte", bandeira: "yt" },
+      "701": { nome: "Argentina", bandeira: "ar" },
+      "710": { nome: "Brasil", bandeira: "br" },
+      "720": { nome: "Bolívia", bandeira: "bo" },
+      "725": { nome: "Chile", bandeira: "cl" },
+      "730": { nome: "Colômbia", bandeira: "co" },
+      "735": { nome: "Equador", bandeira: "ec" },
+      "740": { nome: "Reino Unido", bandeira: "gb" },
+      "745": { nome: "França", bandeira: "fr" },
+      "750": { nome: "Guiana", bandeira: "gy" },
+      "755": { nome: "Paraguai", bandeira: "py" },
+      "760": { nome: "Peru", bandeira: "pe" },
+      "765": { nome: "Suriname", bandeira: "sr" },
+      "770": { nome: "Uruguai", bandeira: "uy" },
+      "775": { nome: "Venezuela", bandeira: "ve" }
+    };
+
+    function consultarPais() {
+      const input = document.getElementById('mmsiInput');
+      const codigo = input.value.trim();
+      
+      const resultadoDiv = document.getElementById('resultado2');
+      const flagImage = document.getElementById('flag-image');
+      const flagLink = document.getElementById('flag-link');
+      const separator = document.querySelector('.separator');
+      
+      // Limpar resultados anteriores
+      resultadoDiv.innerHTML = '';
+      flagImage.style.display = 'none';
+      separator.style.display = 'none';
+      
+      if (codigo.length === 0) {
+        return;
+      }
+      
+      if (codigo.length !== 3) {
+        resultadoDiv.innerHTML = '<div class="result-text" style="color: #ff6b6b;">Por favor, digite exatamente 3 dígitos.</div>';
+        return;
+      }
+      
+      const paisInfo = mmsiDatabase[codigo];
+      
+      if (paisInfo) {
+        const nomePais = paisInfo.nome;
+        const bandeiraCodigo = paisInfo.bandeira;
+        
+        resultadoDiv.innerHTML = `<div class="result-text">País: ${nomePais}</div>`;
+        
+        // Exibir bandeira
+        const flagUrl = `https://flagcdn.com/w160/${bandeiraCodigo}.png`;
+        flagImage.src = flagUrl;
+        flagImage.alt = `Bandeira de ${nomePais}`;
+        flagImage.style.display = 'block';
+        flagLink.href = `https://pt.wikipedia.org/wiki/${nomePais}`;
+        separator.style.display = 'block';
+      } else {
+        resultadoDiv.innerHTML = '<div class="result-text" style="color: #ff6b6b;">Código MMSI não encontrado.</div>';
+      }
+    }
   </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </body>
 </html>
