@@ -598,35 +598,6 @@ function atualizarControleCamadas2() {
       }).addTo(map);
 
 }
-	    
- fetch('https://com3dn.github.io/crsm/scr/sidebar.html')
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById('sidebar-container').innerHTML = html;
-
-        const current = location.pathname.split('/').pop();
-        document.querySelectorAll('#side_items a').forEach(link => {
-          if (link.getAttribute('href') === current) {
-            link.parentElement.classList.add('active');
-            let parent = link.closest('.submenu');
-            if (parent) {
-              parent.classList.add('open');
-              parent.parentElement.classList.add('open');
-            }
-          }
-        });
-
-        document.querySelectorAll('.submenu-toggle').forEach(toggle => {
-          toggle.addEventListener('click', () => {
-            toggle.classList.toggle('open');
-            toggle.querySelector('.submenu').classList.toggle('open');
-          });
-        });
-		
-		  document.getElementById('open_btn').addEventListener('click', function() {
-    document.getElementById('sidebar').classList.toggle('open-sidebar');
-});
-      });
 </script>
 </body>
 </html>
