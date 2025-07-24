@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Carregar Cenários</title>
+  <title>Mapa Interativo</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     body {
@@ -300,247 +300,333 @@
   </div>
 
   <!-- Título -->
-  <h1>Carregar Cenários</h1>
+  <h1>Mapa Interativo</h1>
 
   <!-- Conteúdo Principal -->
-  <div class="content-container">
-    <div class="calculator-container">
-      <div class="upload-section">
-        <h2><i class="fas fa-file-upload"></i> Carregar Planilha com Cenários</h2>
-        <p>Selecione uma planilha .XLSX com múltiplas abas para visualizar rotas simultâneas</p>
-        
-        <div class="upload-area" id="uploadArea">
-          <i class="fas fa-cloud-upload-alt"></i>
-          <p>Arraste e solte sua planilha aqui</p>
-          <p>ou</p>
-          <button class="upload-btn" id="browseBtn">
-            <i class="fas fa-folder-open"></i> Procurar Arquivo
-          </button>
-          <input type="file" id="fileInput" class="file-input" accept=".xlsx">
+<div id="app-container">
+    <div id="sidebar-container"></div>
+    
+    <div id="main-content">
+        <h1>Mapa Interativo</h1>
+        <div id="filtro">
+            <label>🔍 Filtrar casos: </label>
+            <input type="text" id="filtroTexto" placeholder="Palavra-chave" />
+            <button onclick="filtrarCasos()">Filtrar</button>
+            <button onclick="resetarCasos()">Limpar</button>
         </div>
-        
-        <div id="statusMessage" class="status-message" style="display: none;"></div>
-      </div>
-      
-      <div class="preview-section">
-        <h2><i class="fas fa-table"></i> Visualização dos Dados</h2>
-        <div class="sheet-tabs" id="sheetTabs">
-          <!-- Tabs serão geradas dinamicamente -->
+        <div id="map-container">
+            <div id="map"></div>
         </div>
-        <div class="table-container" id="tableContainer">
-          <div class="no-data">
-            <i class="fas fa-info-circle"></i>
-            <p>Carregue uma planilha para visualizar os dados</p>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
-
-  <!-- Rodapé -->
-  <div class="footer">
-    &copy; 2025 Central Marítima e Operacional | Todos os direitos reservados.
-  </div>
-
-  <!-- SheetJS Library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</div>
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Leaflet Control Layers Tree JS -->
+  <script src="https://unpkg.com/leaflet.control.layers.tree/L.Control.Layers.Tree.js"></script>
   <script>
-    // Elementos DOM
-    const uploadArea = document.getElementById('uploadArea');
-    const fileInput = document.getElementById('fileInput');
-    const browseBtn = document.getElementById('browseBtn');
-    const sheetTabs = document.getElementById('sheetTabs');
-    const tableContainer = document.getElementById('tableContainer');
-    const statusMessage = document.getElementById('statusMessage');
+    // Inicialização do mapa
+    const map = L.map('map').setView([-10, -40], 5);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '© COM3DN DN-60'}).addTo(map);
 
-    // Variáveis de estado
-    let workbook = null;
-    let currentSheet = null;
+    // URLs das abas da planilha
+    const urlPortos = 'https://opensheet.vercel.app/1NeWdSYOcd3DI9l2yPA507lveb-sKvuJ45ABAXPfKr0o/Portos';
+    const urlAreas  = 'https://opensheet.vercel.app/1NeWdSYOcd3DI9l2yPA507lveb-sKvuJ45ABAXPfKr0o/Áreas';
+    const urlCasos  = 'https://opensheet.vercel.app/1NeWdSYOcd3DI9l2yPA507lveb-sKvuJ45ABAXPfKr0o/Casos';
+    const urlSararea  = 'https://opensheet.vercel.app/1NeWdSYOcd3DI9l2yPA507lveb-sKvuJ45ABAXPfKr0o/Bases';
+    const urlPortosmundiais  = 'https://opensheet.vercel.app/1NeWdSYOcd3DI9l2yPA507lveb-sKvuJ45ABAXPfKr0o/Portos_mundiais';
 
-    // Eventos
-    browseBtn.addEventListener('click', () => {
-      fileInput.click();
-    });
+    // Grupos de camadas
+    const portosGrupo = [];
+    const areasGrupo = [];
+    const casosGrupo = [];
+    const SarareaGrupo = [];
+    const portosmundiaisGrupo = [];
 
-    fileInput.addEventListener('change', handleFile);
-    
-    uploadArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      uploadArea.style.backgroundColor = 'rgba(50, 50, 50, 0.7)';
-    });
-    
-    uploadArea.addEventListener('dragleave', () => {
-      uploadArea.style.backgroundColor = 'rgba(30, 30, 30, 0.5)';
-    });
-    
-    uploadArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      uploadArea.style.backgroundColor = 'rgba(30, 30, 30, 0.5)';
-      
-      if (e.dataTransfer.files.length) {
-        fileInput.files = e.dataTransfer.files;
-        handleFile();
-      }
-    });
+    // Dados originais dos casos
+    let todosOsCasos = [];
 
-    // Função para processar o arquivo
-    function handleFile() {
-      const file = fileInput.files[0];
-      if (!file) return;
-      
-      if (!file.name.endsWith('.xlsx')) {
-        showStatus('Por favor, selecione um arquivo .XLSX', 'error');
-        return;
-      }
-      
-      showStatus('Carregando arquivo...', 'success');
-      
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const data = new Uint8Array(e.target.result);
-          workbook = XLSX.read(data, { type: 'array' });
-          showStatus(`Arquivo carregado com sucesso! ${workbook.SheetNames.length} abas encontradas.`, 'success');
-          createSheetTabs();
-        } catch (error) {
-          showStatus('Erro ao processar o arquivo: ' + error.message, 'error');
-        }
-      };
-      reader.onerror = () => {
-        showStatus('Erro ao ler o arquivo', 'error');
-      };
-      reader.readAsArrayBuffer(file);
-    }
-
-    // Função para mostrar mensagens de status
-    function showStatus(message, type) {
-      statusMessage.textContent = message;
-      statusMessage.className = 'status-message';
-      statusMessage.classList.add(type === 'error' ? 'status-error' : 'status-success');
-      statusMessage.style.display = 'block';
-      
-      // Esconder mensagem após 5 segundos
-      setTimeout(() => {
-        statusMessage.style.display = 'none';
-      }, 5000);
-    }
-
-    // Função para criar as abas das planilhas
-    function createSheetTabs() {
-      sheetTabs.innerHTML = '';
-      
-      if (!workbook) return;
-      
-      workbook.SheetNames.forEach((sheetName, index) => {
-        const tab = document.createElement('div');
-        tab.className = 'sheet-tab';
-        if (index === 0) {
-          tab.classList.add('active');
-          currentSheet = sheetName;
-          renderSheet(sheetName);
-        }
-        tab.textContent = sheetName;
-        tab.addEventListener('click', () => {
-          // Remover classe ativa de todas as abas
-          document.querySelectorAll('.sheet-tab').forEach(t => t.classList.remove('active'));
-          // Adicionar classe ativa à aba clicada
-          tab.classList.add('active');
-          currentSheet = sheetName;
-          renderSheet(sheetName);
-        });
-        sheetTabs.appendChild(tab);
+    // Função para carregar Portos
+    fetch(urlPortos).then(res => res.json()).then(data => {
+      data.forEach(p => {
+        const lat = parseFloat(p.Latitude);
+        const lon = parseFloat(p.Longitude);
+        const nome = p.Porto || p.Nome || 'Porto';
+        if (!isNaN(lat) && !isNaN(lon)) {
+          const marker = L.circleMarker([lat, lon], {"color": "#660066", "fill": true, "fillColor": "#660066", "fillOpacity": 0.5, "radius": 3, "stroke": true, "weight": 3})
+		  .bindPopup(`<b>${nome}</b>`,{ maxWidth: 600, minWidth: 200 });
+          portosGrupo.push({ label: nome, layer: marker });
+		  }
       });
+      atualizarControleCamadas();
+    });
+let controleCamadas2;
+	   fetch(urlPortosmundiais).then(res => res.json()).then(data => {
+    // Objeto para agrupar portos por país
+    const portosPorPais = {};
+    
+    data.forEach(p => {
+        const lat = parseFloat(p.Latitude);
+        const lon = parseFloat(p.Longitude);
+        const nome = p.Porto;
+        const Pais = p.Pais;
+        
+        if (!isNaN(lat) && !isNaN(lon)) {
+            const marker = L.circleMarker([lat, lon], {
+                "color": "#a8323e",
+                "fill": true,
+                "fillColor": "#a8323e",
+                "fillOpacity": 0.5,
+                "radius": 3,
+                "stroke": true,
+                "weight": 3
+            }).bindPopup(`<b>${nome} - ${Pais}</b><br>${lat},${lon}`, { 
+                maxWidth: 600, 
+                minWidth: 200 
+            });
+            
+            // Se o país ainda não existe no objeto, cria uma entrada para ele
+            if (!portosPorPais[Pais]) {
+                portosPorPais[Pais] = [];
+            }
+            
+            // Adiciona o porto ao país correspondente
+            portosPorPais[Pais].push({
+                label: `${nome} (${lat.toFixed(4)},${lon.toFixed(4)})`,
+                layer: marker
+            });
+        }
+    });
+
+    
+    // Agora transforma o objeto portosPorPais na estrutura hierárquica
+ const treeChildren = Object.keys(portosPorPais)
+    .sort() // Ordena os países alfabeticamente
+    .map(pais => {
+        return {
+            label: `🌎 ${pais}`,
+            selectAllCheckbox: "Selecionar/Desmarcar todos",
+            children: portosPorPais[pais]
+        };
+    });
+
+
+		   
+    // Atualiza a variável global com a estrutura hierárquica
+    portosHierarquia = treeChildren;
+    atualizarControleCamadas2();
+});
+
+function atualizarControleCamadas2() {
+    if (controleCamadas2) {
+        map.removeControl(controleCamadas2);
     }
 
-    // Função para renderizar uma aba da planilha
-    function renderSheet(sheetName) {
-      try {
-        const sheet = workbook.Sheets[sheetName];
-        const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-        
-        if (jsonData.length === 0) {
-          tableContainer.innerHTML = `
-            <div class="no-data">
-              <i class="fas fa-exclamation-circle"></i>
-              <p>Nenhum dado encontrado nesta aba</p>
-            </div>
-          `;
-          return;
+    const treeLayers2 = {
+        label: "📊 Camadas",
+        selectAllCheckbox: "Selecionar/Desmarcar todos",
+        children: [
+            {
+                label: "🛳️ Portos por País",
+                selectAllCheckbox: "Selecionar/Desmarcar todos",
+                children: portosHierarquia
+            }
+        ]
+    };
+    
+    controleCamadas2 = L.control.layers.tree(null, treeLayers2, {
+        namedToggle: false,
+        selectorBack: false,
+        closedSymbol: "➕",
+        openedSymbol: "➖",
+        collapseAll: "Recolher",
+        expandAll: "Expandir"
+    }).addTo(map);
+}
+
+    // Função para carregar Áreas
+    fetch(urlAreas).then(res => res.json()).then(data => {
+      data.forEach(area => {
+        const nome = area.Nome || 'Área';
+        const coordString = area.Coordenadas;
+        if (coordString) {
+          const pontos = coordString.split(';').map(par => {
+            const [lon, lat] = par.split(',').map(Number);
+            return [lat, lon];
+          });
+          const polygon = L.polygon(pontos, {
+            color: 'red',
+            fillOpacity: 0.3
+          }).bindPopup(`<b>${nome}</b>`);
+          areasGrupo.push({ label: nome, layer: polygon });
         }
-        
-        // Criar tabela HTML
-        let tableHTML = '<table class="data-table">';
-        
-        // Cabeçalho
-        const headers = jsonData[0];
-        tableHTML += '<thead><tr>';
-        headers.forEach(header => {
-          tableHTML += `<th>${header || 'Coluna'}</th>`;
-        });
-        tableHTML += '</tr></thead>';
-        
-        // Corpo
-        tableHTML += '<tbody>';
-        for (let i = 1; i < jsonData.length; i++) {
-          const row = jsonData[i];
-          tableHTML += '<tr>';
-          for (let j = 0; j < headers.length; j++) {
-            const cellValue = row[j] !== undefined ? row[j] : '';
-            tableHTML += `<td>${cellValue}</td>`;
+      });
+      atualizarControleCamadas();
+    });
+
+    // Função para carregar Áreas
+    fetch(urlSararea).then(res => res.json()).then(data => {
+      data.forEach(area => {
+        const nome = area.Nome || 'Áreas Base';
+        const coordString = area.Coordenadas;
+        if (coordString) {
+          const pontos = coordString.split(';').map(par => {
+            const [lon, lat] = par.split(',').map(Number);
+            return [lat, lon];
+          });
+          const polygon = L.polygon(pontos, {
+            color: 'gray',
+            fillOpacity: 0.0
+          }).bindPopup(`<b>${nome}</b>`);
+          SarareaGrupo.push({ label: nome, layer: polygon });
+        }
+      });
+      atualizarControleCamadas();
+    });
+
+
+    // Função para carregar Casos
+    fetch(urlCasos).then(res => res.json()).then(data => {
+      todosOsCasos = data;
+      carregarCasos();
+    });
+
+    // Função para carregar Casos com agrupamento por tipo
+    function carregarCasos(filtro = '') {
+      casosGrupo.length = 0; // Limpa o grupo de casos
+
+      // Agrupar casos por tipo
+      const casosPorTipo = {};
+      todosOsCasos.forEach(caso => {
+        const tipo = caso.Tipo || 'Outro';
+        if (!casosPorTipo[tipo]) {
+          casosPorTipo[tipo] = [];
+        }
+        casosPorTipo[tipo].push(caso);
+      });
+
+      // Criar grupos por tipo
+      for (const tipo in casosPorTipo) {
+        const casos = casosPorTipo[tipo];
+        const subGrupo = [];
+
+        casos.forEach(caso => {
+          const lat = parseFloat(caso.Latitude);
+          const lon = parseFloat(caso.Longitude);
+          const titulo = caso.Título || 'Caso';
+          const texto = caso.Texto || '';
+          const imagem = caso.Imagem ? `<img src="${caso.Imagem}" style="width:100%; max-width:300px;" />` : '';
+          const conteudo = `${titulo} ${texto}`.toLowerCase();
+          const icons = caso.icons;
+
+          if (conteudo.includes(filtro.toLowerCase()) && !isNaN(lat) && !isNaN(lon)) {
+            const marker = L.marker([lat, lon], {
+              icon: L.divIcon({
+				className: 'custom-icon',
+				html: `<img src="${icons}" style="width: 10px; height: 10px;">`,
+				iconSize: [15, 15],
+				iconAnchor: [8, 8]
+              })
+            }).bindPopup(`<b>${titulo}</b><br>${texto}<br>${imagem}`);
+            subGrupo.push({ label: titulo, layer: marker });
           }
-          tableHTML += '</tr>';
+        });
+
+        if (subGrupo.length > 0) {
+          casosGrupo.push({ label: `${tipo} (${subGrupo.length})`, selectAllCheckbox: "Selecionar/Desmarcar todos",children: subGrupo });
         }
-        tableHTML += '</tbody></table>';
-        
-        tableContainer.innerHTML = tableHTML;
-      } catch (error) {
-        tableContainer.innerHTML = `
-          <div class="no-data">
-            <i class="fas fa-exclamation-triangle"></i>
-            <p>Erro ao carregar os dados da aba: ${error.message}</p>
-          </div>
-        `;
       }
+
+      atualizarControleCamadas();
     }
 
-    // Adicionar exemplo de planilha para demonstração
-    window.onload = function() {
-      // Criar uma planilha de exemplo
-      const exampleData = {
-        "Cenário 1": [
-          ["Navio", "Tipo", "Latitude", "Longitude", "Hora"],
-          ["Navio A", "Pesquisa", "-23.55", "-46.63", "10:00"],
-          ["Navio B", "Pesquisa", "-23.50", "-46.70", "10:15"]
-        ],
-        "Cenário 2": [
-          ["Navio", "Tipo", "Latitude", "Longitude", "Hora"],
-          ["Navio C", "Pesquisa", "-22.90", "-43.17", "11:00"],
-          ["Navio D", "Pesquisa", "-22.85", "-43.25", "11:20"]
+    // Funções de filtro
+    function filtrarCasos() {
+      const palavra = document.getElementById('filtroTexto').value;
+      carregarCasos(palavra);
+    }
+
+    function resetarCasos() {
+      document.getElementById('filtroTexto').value = '';
+      carregarCasos();
+    }
+
+    // Controle de camadas
+    let controleCamadas;
+    
+
+    function atualizarControleCamadas() {
+      if (controleCamadas) {
+        map.removeControl(controleCamadas);
+      }
+	    
+
+      const treeLayers = {
+        label: "📊 Camadas",
+        selectAllCheckbox: "Selecionar/Desmarcar todos",
+        children: [
+          {
+            label: "🟢 Portos",
+			selectAllCheckbox: "Selecionar/Desmarcar todos",
+            children: portosGrupo
+          },
+          {
+            label: "🔴 Áreas",
+			selectAllCheckbox: "Selecionar/Desmarcar todos",
+            children: areasGrupo
+          },
+          {
+            label: "🟡 Casos",
+			selectAllCheckbox: "Selecionar/Desmarcar todos",
+            children: casosGrupo
+          },
+          {
+            label: "🟣 Linhas Base",
+			selectAllCheckbox: "Selecionar/Desmarcar todos",
+            children: SarareaGrupo
+          }
         ]
       };
-      
-      // Simular carregamento de planilha de exemplo após 2 segundos
-      setTimeout(() => {
-        showStatus('Carregando exemplo de planilha...', 'success');
-        
-        setTimeout(() => {
-          // Criar workbook de exemplo
-          workbook = {
-            SheetNames: Object.keys(exampleData),
-            Sheets: {}
-          };
-          
-          Object.keys(exampleData).forEach(sheetName => {
-            const sheetData = exampleData[sheetName];
-            const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
-            workbook.Sheets[sheetName] = worksheet;
+
+	    
+      controleCamadas = L.control.layers.tree(null, treeLayers, {
+        namedToggle: false,
+        selectorBack: false,
+        closedSymbol: "➕",
+        openedSymbol: "➖",
+        collapseAll: "Recolher",
+        expandAll: "Expandir"
+      }).addTo(map);
+
+}
+	    
+ fetch('https://com3dn.github.io/crsm/scr/sidebar.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('sidebar-container').innerHTML = html;
+
+        const current = location.pathname.split('/').pop();
+        document.querySelectorAll('#side_items a').forEach(link => {
+          if (link.getAttribute('href') === current) {
+            link.parentElement.classList.add('active');
+            let parent = link.closest('.submenu');
+            if (parent) {
+              parent.classList.add('open');
+              parent.parentElement.classList.add('open');
+            }
+          }
+        });
+
+        document.querySelectorAll('.submenu-toggle').forEach(toggle => {
+          toggle.addEventListener('click', () => {
+            toggle.classList.toggle('open');
+            toggle.querySelector('.submenu').classList.toggle('open');
           });
-          
-          showStatus(`Exemplo carregado! ${workbook.SheetNames.length} abas disponíveis.`, 'success');
-          createSheetTabs();
-        }, 1000);
-      }, 2000);
-    };
-  </script>
+        });
+		
+		  document.getElementById('open_btn').addEventListener('click', function() {
+    document.getElementById('sidebar').classList.toggle('open-sidebar');
+});
+      });
+</script>
 </body>
 </html>
