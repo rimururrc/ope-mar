@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Distância entre Portos</title>
+  <style>
+    body {
+      background: #000 url('veleiro1.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu-bar {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 15px 0;
+      background-color: rgba(20, 20, 20, 0.9);
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .menu-bar a {
+      color: white;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    .menu-bar a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 2rem;
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+      background-color: rgba(31, 31, 31, 0.7);
+      padding: 15px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    .content {
+      padding: 20px;
+      max-width: 700px;
+      margin: 0 auto;
+      background-color: rgba(0,0,0,0.6);
+      border-radius: 10px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #aaa;
+      background-color: rgba(20, 20, 20, 0.8);
+      margin-top: auto;
+    }
+
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    input {
+      width: calc(50% - 12px);
+      margin: 6px;
+    }
+
+    button {
+      background-color: #00d1ff;
+      color: white;
+      cursor: pointer;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #007acc;
+    }
+
+    .result {
+      margin-top: 20px;
+      background-color: #fff;
+      color: #000;
+      padding: 15px;
+      border-radius: 8px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="menu-bar">
+    <a href="prompts.html">Prompts</a>
+    <a href="como-usar.html">Como Usar</a>
+    <a href="ias.html">IAs</a>
+    <a href="sistemas.html">Sistemas</a>
+    <a href="noticias.html">Notícias</a>
+    <a href="globo.html">Globo</a>
+    <a href="linksuteis.html">Links úteis</a>
+  </div>
+
+  <h1>Distância entre Portos</h1>
+
+  <div class="content">
+    <label for="portA">Coordenadas do Porto A (Lat,Lng):</label><br>
+    <input type="text" id="portA" placeholder="Ex: -1.55, -48.57"><br>
+
+    <label for="portB">Coordenadas do Porto B (Lat,Lng):</label><br>
+    <input type="text" id="portB" placeholder="Ex: -23.96, -46.33"><br>
+
+    <button onclick="calcularDistancia()">Calcular Distância</button>
+
+    <div id="resultado" class="result"></div>
+  </div>
+
+  <div class="footer">
+    &copy; 2025 Central Marítima e Operacional | Todos os direitos reservados.
+  </div>
+
+  <script>
+    function toRad(graus) {
+      return graus * Math.PI / 180;
+    }
+
+    function calcularDistancia() {
+      const coordA = document.getElementById('portA').value.split(',').map(p => parseFloat(p.trim()));
+      const coordB = document.getElementById('portB').value.split(',').map(p => parseFloat(p.trim()));
+
+      if (coordA.length !== 2 || coordB.length !== 2 || coordA.some(isNaN) || coordB.some(isNaN)) {
+        document.getElementById('resultado').textContent = 'Coordenadas inválidas.';
+        return;
+      }
+
+      const R = 6371; // raio da Terra em km
+      const dLat = toRad(coordB[0] - coordA[0]);
+      const dLon = toRad(coordB[1] - coordA[1]);
+      const lat1 = toRad(coordA[0]);
+      const lat2 = toRad(coordB[0]);
+
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1) * Math.cos(lat2) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+      const distanciaKM = R * c;
+      const distanciaMN = distanciaKM / 1.852;
+
+      document.getElementById('resultado').textContent =
+        `Distância aproximada: ${distanciaKM.toFixed(2)} km (${distanciaMN.toFixed(2)} MN)`;
+    }
+  </script>
+</body>
+</html>

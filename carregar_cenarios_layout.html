@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carregar Cenários</title>
+  <style>
+    body {
+      background: #000 url('veleiro1.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu-bar {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 15px 0;
+      background-color: rgba(20, 20, 20, 0.9);
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .menu-bar a {
+      color: white;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    .menu-bar a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 2rem;
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+      background-color: rgba(31, 31, 31, 0.7);
+      padding: 15px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    .content {
+      padding: 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+      background-color: rgba(0,0,0,0.6);
+      border-radius: 10px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #aaa;
+      background-color: rgba(20, 20, 20, 0.8);
+      margin-top: auto;
+    }
+
+    #map {
+      height: 80vh;
+      width: 100%;
+      margin-top: 20px;
+      border: 2px solid #444;
+      border-radius: 8px;
+    }
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+
+  <div class="menu-bar">
+    <a href="prompts.html">Prompts</a>
+    <a href="como-usar.html">Como Usar</a>
+    <a href="ias.html">IAs</a>
+    <a href="sistemas.html">Sistemas</a>
+    <a href="noticias.html">Notícias</a>
+    <a href="globo.html">Globo</a>
+    <a href="linksuteis.html">Links Úteis</a>
+  </div>
+
+  <h1>Carregamento de Cenários</h1>
+
+  <div class="content">
+    <h3>Carregar Arquivo com as Posições</h3>
+    <p>
+      Selecione o arquivo Padrão do Excel (.xlsx) com as múltiplas abas de Plotagem. Cada aba representará um contato de interesse com suas posições. As trajetórias serão desenhadas automaticamente no mapa.
+    </p>
+    <input type="file" id="fileInput" />
+    <div id="map"></div>
+  </div>
+
+  <div class="footer">
+    &copy; 2025 Central Marítima e Operacional | Todos os direitos reservados.
+  </div>
+
+  <script>
+    const map = L.map('map').setView([-8, -35], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'Map data &copy; OpenStreetMap contributors'
+    }).addTo(map);
+  </script>
+
+</body>
+</html>

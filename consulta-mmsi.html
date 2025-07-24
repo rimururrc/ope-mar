@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Consulta de País pelo MMSI</title>
+  <style>
+    body {
+      background: #000 url('veleiro1.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu-bar {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 15px 0;
+      background-color: rgba(20, 20, 20, 0.9);
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .menu-bar a {
+      color: white;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    .menu-bar a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 2rem;
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+      background-color: rgba(31, 31, 31, 0.7);
+      padding: 15px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    .content {
+      padding: 20px;
+      max-width: 700px;
+      margin: 0 auto;
+      background-color: rgba(0,0,0,0.6);
+      border-radius: 10px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #aaa;
+      background-color: rgba(20, 20, 20, 0.8);
+      margin-top: auto;
+    }
+
+    .calculator-container {
+      margin: 0 auto;
+      padding: 10px;
+      background: white;
+      color: black;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+
+    .flag-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
+    }
+
+    .flag-display {
+      margin: 15px auto;
+      width: 150px;
+      height: 100px;
+      object-fit: contain;
+      background-color: #ffffff;
+      padding: 5px;
+    }
+
+    .vertical-pole {
+      position: relative;
+      text-align: center;
+      margin: 15px 0;
+      min-height: 180px;
+    }
+
+    .vertical-pole::before {
+      content: "";
+      position: absolute;
+      left: -5px;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--primary-color), #f0f0f0);
+      transform: translateX(-50%);
+      display: none;
+    }
+
+    .vertical-pole.show::before {
+      display: block;
+    }
+
+    #bandeira {
+      position: relative;
+      z-index: 2;
+      border: 1px solid #fff;
+      border-radius: 4px;
+      background: white;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="menu-bar">
+    <a href="prompts.html">Prompts</a>
+    <a href="como-usar.html">Como Usar</a>
+    <a href="ias.html">IAs</a>
+    <a href="sistemas.html">Sistemas</a>
+    <a href="noticias.html">Notícias</a>
+    <a href="globo.html">Globo</a>
+    <a href="linksuteis.html">Links úteis</a>
+  </div>
+
+  <h1>Consulta de País pelo MMSI</h1>
+
+  <div class="content">
+    <div class="calculator-container">
+      <h3 style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <i class="fas fa-search"></i>
+        Digite os 3 primeiros dígitos do MMSI
+      </h3>
+      <input type="number" id="mmsiInput" placeholder="Ex: 710 (Brasil)" oninput="consultarPais()" maxlength="3" style="width: 80%; margin-top: 10px; height: 30px;">
+      <button onclick="document.getElementById('mmsiInput').value = ''; consultarPais();" style="padding: 5px 5px; background: #f0f0f0; border: none; border-radius: 5px; cursor: pointer;">
+        <i class="fas fa-times"></i> Limpar
+      </button>
+      <div class="flag-container">
+        <div style="margin-top:10px" id="resultado2"></div>
+        <div class="separator vertical-pole" style="display: none;">
+          <a id="flag-link" href="#">
+            <img id="bandeira" src="" alt="Bandeira" style="max-width: 120px; display: none;">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    &copy; 2025 Central Marítima e Operacional | Todos os direitos reservados.
+  </div>
+
+  <script>
+    // Função consultarPais permanece inalterada
+    " + document.querySelector('script')?.innerHTML + "
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</body>
+</html>

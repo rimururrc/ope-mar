@@ -1,0 +1,493 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mapa Interativo</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    body {
+      background: #000 url('veleiro1.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Menu Superior */
+    .menu-bar {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 15px 0;
+      background-color: rgba(20, 20, 20, 0.9);
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .menu-bar a {
+      color: white;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    .menu-bar a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 2rem;
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+      background-color: rgba(31, 31, 31, 0.7);
+      padding: 15px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    a {
+      color: #00d1ff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #aaa;
+      background-color: rgba(20, 20, 20, 0.8);
+      margin-top: auto;
+    }
+
+    /* Conteúdo Principal */
+    .content-container {
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: rgba(40, 40, 40, 0.9);
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      width: 95%;
+    }
+
+    /* Mapa */
+    #map-container {
+      height: 70vh;
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+
+    #map {
+      height: 100%;
+      width: 100%;
+    }
+
+    /* Filtro */
+    #filtro {
+      background: rgba(60, 60, 60, 0.9);
+      padding: 15px;
+      border-radius: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    #filtro label {
+      font-weight: bold;
+      color: #00d1ff;
+    }
+
+    #filtro input {
+      flex: 1;
+      min-width: 200px;
+      padding: 10px;
+      border: 1px solid #00d1ff;
+      border-radius: 4px;
+      background-color: rgba(50, 50, 50, 0.8);
+      color: white;
+    }
+
+    #filtro button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    #filtro button:hover {
+      background-color: #06d157;
+    }
+
+    @media (max-width: 768px) {
+      .menu-bar {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      
+      .content-container {
+        width: 95%;
+        padding: 10px;
+      }
+      
+      #filtro {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      #filtro input {
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra de Menu -->
+  <div class="menu-bar">
+    <a href="prompts.html">Prompts</a>
+    <a href="como-usar.html">Como Usar</a>
+    <a href="ias.html">IAs</a>
+    <a href="sistemas.html">Sistemas</a>
+    <a href="noticias.html">Notícias</a>
+    <a href="globo.html">Globo</a>
+    <a href="linksuteis.html">Links Úteis</a>
+  </div>
+
+  <!-- Título -->
+  <h1>Mapa Interativo</h1>
+
+  <!-- Conteúdo Principal -->
+  <div class="content-container">
+    <div id="filtro">
+      <label>🔍 Filtrar casos: </label>
+      <input type="text" id="filtroTexto" placeholder="Palavra-chave" />
+      <button onclick="filtrarCasos()">Filtrar</button>
+      <button onclick="resetarCasos()">Limpar</button>
+    </div>
+    <div id="map-container">
+      <div id="map"></div>
+    </div>
+  </div>
+
+  <!-- Rodapé -->
+  <div class="footer">
+    &copy; 2025 Central Marítima e Operacional | Todos os direitos reservados.
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // Inicialização do mapa
+    const map = L.map('map').setView([-10, -40], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© COM3DN DN-60'
+    }).addTo(map);
+
+    // URLs das abas da planilha (mantendo as mesmas URLs do código original)
+    const urlPortos = 'https://opensheet.vercel.app/1NeWdSYOcd3DI9l2yPA507lveb-sKvuJ45ABAXPfKr0o/Portos';
+    const urlAreas  = 'https://opensheet.vercel.app/1NeWdSYOcd3DI9l2yPA507lveb-sKvuJ45ABAXPfKr0o/Áreas';
+    const urlCasos  = 'https://opensheet.vercel.app/1NeWdSYOcd3DI9l2yPA507lveb-sKvuJ45ABAXPfKr0o/Casos';
+    const urlSararea  = 'https://opensheet.vercel.app/1NeWdSYOcd3DI9l2yPA507lveb-sKvuJ45ABAXPfKr0o/Bases';
+    const urlPortosmundiais  = 'https://opensheet.vercel.app/1NeWdSYOcd3DI9l2yPA507lveb-sKvuJ45ABAXPfKr0o/Portos_mundiais';
+
+    // Grupos de camadas
+    const portosGrupo = [];
+    const areasGrupo = [];
+    const casosGrupo = [];
+    const SarareaGrupo = [];
+    const portosmundiaisGrupo = [];
+
+    // Dados originais dos casos
+    let todosOsCasos = [];
+
+    // Função para carregar Portos
+    fetch(urlPortos)
+      .then(res => res.json())
+      .then(data => {
+        data.forEach(p => {
+          const lat = parseFloat(p.Latitude);
+          const lon = parseFloat(p.Longitude);
+          const nome = p.Porto || p.Nome || 'Porto';
+          if (!isNaN(lat) && !isNaN(lon)) {
+            const marker = L.circleMarker([lat, lon], {
+              "color": "#660066",
+              "fill": true,
+              "fillColor": "#660066",
+              "fillOpacity": 0.5,
+              "radius": 3,
+              "stroke": true,
+              "weight": 3
+            }).bindPopup(`<b>${nome}</b>`, {
+              maxWidth: 600,
+              minWidth: 200
+            });
+            portosGrupo.push({
+              label: nome,
+              layer: marker
+            });
+          }
+        });
+        atualizarControleCamadas();
+      });
+
+    let controleCamadas2;
+    let portosHierarquia = [];
+
+    fetch(urlPortosmundiais)
+      .then(res => res.json())
+      .then(data => {
+        // Objeto para agrupar portos por país
+        const portosPorPais = {};
+        data.forEach(p => {
+          const lat = parseFloat(p.Latitude);
+          const lon = parseFloat(p.Longitude);
+          const nome = p.Porto;
+          const Pais = p.Pais;
+          if (!isNaN(lat) && !isNaN(lon)) {
+            const marker = L.circleMarker([lat, lon], {
+              "color": "#a8323e",
+              "fill": true,
+              "fillColor": "#a8323e",
+              "fillOpacity": 0.5,
+              "radius": 3,
+              "stroke": true,
+              "weight": 3
+            }).bindPopup(`<b>${nome} - ${Pais}</b><br>${lat},${lon}`, {
+              maxWidth: 600,
+              minWidth: 200
+            });
+            // Se o país ainda não existe no objeto, cria uma entrada para ele
+            if (!portosPorPais[Pais]) {
+              portosPorPais[Pais] = [];
+            }
+            // Adiciona o porto ao país correspondente
+            portosPorPais[Pais].push({
+              label: `${nome} (${lat.toFixed(4)},${lon.toFixed(4)})`,
+              layer: marker
+            });
+          }
+        });
+        // Agora transforma o objeto portosPorPais na estrutura hierárquica
+        const treeChildren = Object.keys(portosPorPais)
+          .sort() // Ordena os países alfabeticamente
+          .map(pais => {
+            return {
+              label: `🌎 ${pais}`,
+              selectAllCheckbox: "Selecionar/Desmarcar todos",
+              children: portosPorPais[pais]
+            };
+          });
+        // Atualiza a variável global com a estrutura hierárquica
+        portosHierarquia = treeChildren;
+        atualizarControleCamadas2();
+      });
+
+    function atualizarControleCamadas2() {
+      if (controleCamadas2) {
+        map.removeControl(controleCamadas2);
+      }
+      const treeLayers2 = {
+        label: "📊 Camadas",
+        selectAllCheckbox: "Selecionar/Desmarcar todos",
+        children: [{
+          label: "🛳️ Portos por País",
+          selectAllCheckbox: "Selecionar/Desmarcar todos",
+          children: portosHierarquia
+        }]
+      };
+      controleCamadas2 = L.control.layers.tree(null, treeLayers2, {
+        namedToggle: false,
+        selectorBack: false,
+        closedSymbol: "➕",
+        openedSymbol: "➖",
+        collapseAll: "Recolher",
+        expandAll: "Expandir"
+      }).addTo(map);
+    }
+
+    // Função para carregar Áreas
+    fetch(urlAreas)
+      .then(res => res.json())
+      .then(data => {
+        data.forEach(area => {
+          const nome = area.Nome || 'Área';
+          const coordString = area.Coordenadas;
+          if (coordString) {
+            const pontos = coordString.split(';').map(par => {
+              const [lon, lat] = par.split(',').map(Number);
+              return [lat, lon];
+            });
+            const polygon = L.polygon(pontos, {
+              color: 'red',
+              fillOpacity: 0.3
+            }).bindPopup(`<b>${nome}</b>`);
+            areasGrupo.push({
+              label: nome,
+              layer: polygon
+            });
+          }
+        });
+        atualizarControleCamadas();
+      });
+
+    // Função para carregar Áreas
+    fetch(urlSararea)
+      .then(res => res.json())
+      .then(data => {
+        data.forEach(area => {
+          const nome = area.Nome || 'Áreas Base';
+          const coordString = area.Coordenadas;
+          if (coordString) {
+            const pontos = coordString.split(';').map(par => {
+              const [lon, lat] = par.split(',').map(Number);
+              return [lat, lon];
+            });
+            const polygon = L.polygon(pontos, {
+              color: 'gray',
+              fillOpacity: 0.0
+            }).bindPopup(`<b>${nome}</b>`);
+            SarareaGrupo.push({
+              label: nome,
+              layer: polygon
+            });
+          }
+        });
+        atualizarControleCamadas();
+      });
+
+    // Função para carregar Casos
+    fetch(urlCasos)
+      .then(res => res.json())
+      .then(data => {
+        todosOsCasos = data;
+        carregarCasos();
+      });
+
+    // Função para carregar Casos com agrupamento por tipo
+    function carregarCasos(filtro = '') {
+      casosGrupo.length = 0; // Limpa o grupo de casos
+      // Agrupar casos por tipo
+      const casosPorTipo = {};
+      todosOsCasos.forEach(caso => {
+        const tipo = caso.Tipo || 'Outro';
+        if (!casosPorTipo[tipo]) {
+          casosPorTipo[tipo] = [];
+        }
+        casosPorTipo[tipo].push(caso);
+      });
+      // Criar grupos por tipo
+      for (const tipo in casosPorTipo) {
+        const casos = casosPorTipo[tipo];
+        const subGrupo = [];
+        casos.forEach(caso => {
+          const lat = parseFloat(caso.Latitude);
+          const lon = parseFloat(caso.Longitude);
+          const titulo = caso.Título || 'Caso';
+          const texto = caso.Texto || '';
+          const imagem = caso.Imagem ? `<img src="${caso.Imagem}" style="width:100%; max-width:300px;" />` : '';
+          const conteudo = `${titulo} ${texto}`.toLowerCase();
+          const icons = caso.icons;
+          if (conteudo.includes(filtro.toLowerCase()) && !isNaN(lat) && !isNaN(lon)) {
+            const marker = L.marker([lat, lon], {
+              icon: L.divIcon({
+                className: 'custom-icon',
+                html: `<img src="${icons}" style="width: 10px; height: 10px;">`,
+                iconSize: [15, 15],
+                iconAnchor: [8, 8]
+              })
+            }).bindPopup(`<b>${titulo}</b><br>${texto}<br>${imagem}`);
+            subGrupo.push({
+              label: titulo,
+              layer: marker
+            });
+          }
+        });
+        if (subGrupo.length > 0) {
+          casosGrupo.push({
+            label: `${tipo} (${subGrupo.length})`,
+            selectAllCheckbox: "Selecionar/Desmarcar todos",
+            children: subGrupo
+          });
+        }
+      }
+      atualizarControleCamadas();
+    }
+
+    // Funções de filtro
+    function filtrarCasos() {
+      const palavra = document.getElementById('filtroTexto').value;
+      carregarCasos(palavra);
+    }
+
+    function resetarCasos() {
+      document.getElementById('filtroTexto').value = '';
+      carregarCasos();
+    }
+
+    // Controle de camadas
+    let controleCamadas;
+
+    function atualizarControleCamadas() {
+      if (controleCamadas) {
+        map.removeControl(controleCamadas);
+      }
+      const treeLayers = {
+        label: "📊 Camadas",
+        selectAllCheckbox: "Selecionar/Desmarcar todos",
+        children: [{
+            label: "🟢 Portos",
+            selectAllCheckbox: "Selecionar/Desmarcar todos",
+            children: portosGrupo
+          },
+          {
+            label: "🔴 Áreas",
+            selectAllCheckbox: "Selecionar/Desmarcar todos",
+            children: areasGrupo
+          },
+          {
+            label: "🟡 Casos",
+            selectAllCheckbox: "Selecionar/Desmarcar todos",
+            children: casosGrupo
+          },
+          {
+            label: "🟣 Linhas Base",
+            selectAllCheckbox: "Selecionar/Desmarcar todos",
+            children: SarareaGrupo
+          }
+        ]
+      };
+      controleCamadas = L.control.layers.tree(null, treeLayers, {
+        namedToggle: false,
+        selectorBack: false,
+        closedSymbol: "➕",
+        openedSymbol: "➖",
+        collapseAll: "Recolher",
+        expandAll: "Expandir"
+      }).addTo(map);
+    }
+  </script>
+</body>
+</html>
+```

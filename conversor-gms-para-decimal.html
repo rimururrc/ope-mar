@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conversor de GMS para Decimal</title>
+  <style>
+    body {
+      background: #000 url('veleiro1.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu-bar {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 15px 0;
+      background-color: rgba(20, 20, 20, 0.9);
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .menu-bar a {
+      color: white;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    .menu-bar a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 2rem;
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+      background-color: rgba(31, 31, 31, 0.7);
+      padding: 15px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    .content {
+      padding: 20px;
+      max-width: 700px;
+      margin: 0 auto;
+      background-color: rgba(0,0,0,0.6);
+      border-radius: 10px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #aaa;
+      background-color: rgba(20, 20, 20, 0.8);
+      margin-top: auto;
+    }
+
+    .converter-container {
+      max-width: 100%;
+      padding: 15px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      color: black;
+    }
+
+    .input-group {
+      margin-bottom: 10px;
+    }
+
+    .gms-inputs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .gms-inputs input, .gms-inputs select {
+      padding: 6px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .result-container {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border-left: 4px solid #00d1ff;
+    }
+
+    .decimal-result {
+      font-family: monospace;
+      font-size: 18px;
+      margin: 10px 0;
+      color: #000;
+    }
+
+    .copy-btn {
+      background: #00d1ff;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .copy-btn:hover {
+      background: #4f46e5;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+  <div class="menu-bar">
+    <a href="prompts.html">Prompts</a>
+    <a href="como-usar.html">Como Usar</a>
+    <a href="ias.html">IAs</a>
+    <a href="sistemas.html">Sistemas</a>
+    <a href="noticias.html">Notícias</a>
+    <a href="globo.html">Globo</a>
+    <a href="linksuteis.html">Links úteis</a>
+  </div>
+
+  <h1>Conversor de GMS para Decimal</h1>
+
+  <div class="content">
+    <div class="converter-container">
+      <div class="input-group">
+        <label>Latitude:</label>
+        <div class="gms-inputs">
+          <input type="number" id="latGraus" placeholder="Graus" min="0" max="90">
+          <span>°</span>
+          <input type="number" id="latMinutos" placeholder="Minutos" min="0" max="59">
+          <span>'</span>
+          <input type="number" id="latSegundos" placeholder="Segundos" min="0" max="59">
+          <span>"</span>
+          <select id="latHemisferio">
+            <option value="N">N</option>
+            <option value="S">S</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Longitude:</label>
+        <div class="gms-inputs">
+          <input type="number" id="longGraus" placeholder="Graus" min="0" max="180">
+          <span>°</span>
+          <input type="number" id="longMinutos" placeholder="Minutos" min="0" max="59">
+          <span>'</span>
+          <input type="number" id="longSegundos" placeholder="Segundos" min="0" max="59">
+          <span>"</span>
+          <select id="longHemisferio">
+            <option value="E">E</option>
+            <option value="W">W</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="result-container">
+        <div class="decimal-result">
+          <h4>Resultado:
+            <span id="latDecimal"></span>,
+            <span id="longDecimal"></span>
+          </h4>
+        </div>
+        <button id="copyResults" class="copy-btn">
+          <i class="fas fa-copy"></i> Copiar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    &copy; 2025 Central Marítima e Operacional | Todos os direitos reservados.
+  </div>
+
+  <script>
+    function converterGMSparaDecimal() {
+      const getValidValue = (id, max) => {
+        const el = document.getElementById(id);
+        let val = parseFloat(el.value) || 0;
+        val = Math.min(val, max);
+        val = Math.max(val, 0);
+        el.value = val;
+        return val;
+      };
+
+      const latGraus = getValidValue("latGraus", 90);
+      const latMinutos = getValidValue("latMinutos", 59);
+      const latSegundos = getValidValue("latSegundos", 59);
+      const latHemisferio = document.getElementById("latHemisferio").value;
+
+      const longGraus = getValidValue("longGraus", 180);
+      const longMinutos = getValidValue("longMinutos", 59);
+      const longSegundos = getValidValue("longSegundos", 59);
+      const longHemisferio = document.getElementById("longHemisferio").value;
+
+      const toDecimal = (g, m, s, h) => {
+        const decimal = g + (m / 60) + (s / 3600);
+        return (h === 'S' || h === 'W') ? -decimal : decimal;
+      };
+
+      const latDec = toDecimal(latGraus, latMinutos, latSegundos, latHemisferio);
+      const longDec = toDecimal(longGraus, longMinutos, longSegundos, longHemisferio);
+
+      document.getElementById("latDecimal").textContent = `Lat: ${latDec.toFixed(4)}`;
+      document.getElementById("longDecimal").textContent = ` Long: ${longDec.toFixed(4)}`;
+    }
+
+    document.querySelectorAll("input, select").forEach(el => {
+      el.addEventListener("input", () => {
+        if (window.conversionTimeout) clearTimeout(window.conversionTimeout);
+        window.conversionTimeout = setTimeout(converterGMSparaDecimal, 300);
+      });
+    });
+
+    document.getElementById("copyResults").addEventListener("click", () => {
+      const lat = document.getElementById("latDecimal").textContent;
+      const long = document.getElementById("longDecimal").textContent;
+      navigator.clipboard.writeText(`${lat}, ${long}`)
+        .then(() => {
+          const btn = document.getElementById("copyResults");
+          btn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+          setTimeout(() => {
+            btn.innerHTML = '<i class="fas fa-copy"></i> Copiar';
+          }, 2000);
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", converterGMSparaDecimal);
+  </script>
+</body>
+</html>

@@ -1,0 +1,843 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Formatador de Mensagens</title>
+  <style>
+    body {
+      background: #000 url('veleiro1.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Menu Superior */
+    .menu-bar {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 15px 0;
+      background-color: rgba(20, 20, 20, 0.9);
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .menu-bar a {
+      color: white;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    .menu-bar a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 2rem;
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+      background-color: rgba(31, 31, 31, 0.7);
+      padding: 15px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    a {
+      color: #00d1ff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #aaa;
+      background-color: rgba(20, 20, 20, 0.8);
+      margin-top: auto;
+    }
+
+    /* Conteúdo Principal */
+    .content-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: rgba(40, 40, 40, 0.9);
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      width: 90%;
+    }
+
+    .calculator-container {
+      padding: 20px;
+    }
+
+    .calculator-container h1, .calculator-container h2, .calculator-container h3 {
+      color: #00d1ff;
+    }
+
+    .calculator-container h1 {
+      text-align: center;
+      background-color: transparent;
+      padding: 0;
+      display: block;
+      font-size: 2rem;
+    }
+
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      cursor: help;
+    }
+
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 400px;
+      background-color: #555;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -100px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 12px;
+    }
+
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    input, select, textarea, button {
+      background-color: rgba(60, 60, 60, 0.8);
+      color: white;
+      border: 1px solid #00d1ff;
+      border-radius: 4px;
+      padding: 5px;
+      margin: 2px;
+    }
+
+    button {
+      background-color: #007BFF;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 5px 10px;
+      border: none;
+    }
+
+    button:hover {
+      background-color: #06d157;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+      background-color: rgba(50, 50, 50, 0.8);
+    }
+
+    table, th, td {
+      border: 1px solid #00d1ff;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: rgba(0, 209, 255, 0.2);
+    }
+
+    .tybbutton {
+      background-color: #007BFF;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+
+    .tybtogglecontent {
+      background-color: rgba(50, 50, 50, 0.8);
+      padding: 15px;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+
+    #fotoNavio {
+      max-width: 300px;
+      max-height: 200px;
+      display: block;
+      margin-top: 10px;
+    }
+
+    .form-section {
+      margin-bottom: 20px;
+    }
+
+    .form-row {
+      margin-bottom: 10px;
+    }
+
+    .form-row label {
+      display: inline-block;
+      width: 100px;
+      font-weight: bold;
+    }
+
+    .form-row input, .form-row select {
+      width: 300px;
+    }
+
+    .coord-group {
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+    .coord-group input {
+      width: 40px;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 0.9em;
+      margin-left: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .menu-bar {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      
+      .content-container {
+        width: 95%;
+        padding: 10px;
+      }
+      
+      .form-row input, .form-row select {
+        width: 100%;
+        margin-top: 5px;
+      }
+      
+      table {
+        font-size: 0.8em;
+      }
+      
+      .tooltip .tooltiptext {
+        width: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra de Menu -->
+  <div class="menu-bar">
+    <a href="prompts.html">Prompts</a>
+    <a href="como-usar.html">Como Usar</a>
+    <a href="ias.html">IAs</a>
+    <a href="sistemas.html">Sistemas</a>
+    <a href="noticias.html">Notícias</a>
+    <a href="globo.html">Globo</a>
+    <a href="linksuteis.html">Links Úteis</a>
+  </div>
+
+  <!-- Título -->
+  <h1>Formatador de Mensagens</h1>
+
+  <!-- Conteúdo Principal -->
+  <div class="content-container">
+    <div class="calculator-container">
+      <h3>Instruções:</h3>
+      <span style="width: 600px;margin-left:6px;white-space: nowrap;">Passo 1: Clique no botão <span style="font-weight:bolder;">"DESBLOQUEAR"</span> para liberar o formulario.</span>
+      <br>
+      <b class="tooltip">
+        <button style="margin-left: 20px;background-color: #007BFF;font-size: 15px;">
+          <a style="background-color: #007BFF;color:#000;" href="https://cors-anywhere.herokuapp.com/corsdemo?accessRequest=41f7534cf594b2448db67c4581dae3deed91f7ce832c91825a26dee57184f17a">Desbloquear</a>
+        </button>
+        <span class="tooltiptext">Clique no botão "DESBLOQUEAR" liberar o formulario.</span>
+      </b>
+      
+      <h2 style="width: 700px;margin-left:0px;white-space: nowrap;">Formulário de Mensagem NAESP - NAVIO DE PESQUISA <span style="color: red; font-size:xx-small">alt 290525</span></h2>
+      
+      <form id="messageForm">
+        <div class="form-section">
+          <div class="form-row">
+            <b class="tooltip" style="width: 600px;margin-left:0px;white-space: nowrap;">DE: 
+              <input style="width: 300px;margin-left:22px" type="text" id="origem" name="origem" value="COM3DN" placeholder="Digite o Origem">
+              <span class="tooltiptext">Digite o Origem (ex: COM3DN, COMPAZ, DRGNAV, etc.)</span>
+            </b>
+          </div>
+          
+          <div class="form-row">
+            <b class="tooltip" style="width: 600px;margin-left:0px;white-space: nowrap;">PARA: 
+              <input style="width: 300px" type="text" id="para" name="para" value="COMPAZ" placeholder="Digite o destinatário de ação">
+              <span class="tooltiptext">Destinatário principal da mensagem (ex: COMPAZ, DRGNAV, etc.)</span>
+            </b>
+          </div>
+          
+          <div class="form-row">
+            <b class="tooltip" style="width: 600px;margin-left:0px;white-space: nowrap;">INFO: 
+              <input style="width: 700px;margin-left:6px;white-space: nowrap;" value="AGAGAG CIMBRA CPCPCP DRGNAV CPNDES OPENAV PRTCOS ZZZBBB XMT NBHAES" type="text" id="info" name="info" placeholder="Mais alguma OM na informação?">
+              <span class="tooltiptext">Organizações Militares que devem receber cópia da informação</span>
+            </b>
+          </div>
+        </div>
+
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <b class="tooltip">IMO: <input type="text" id="imo" name="imo" placeholder="Digite o número IMO" maxlength="7">
+                  <span class="tooltiptext">Número de identificação único do navio (7 dígitos)</span>
+                </b>
+                <b class="tooltip">
+                  <button style="margin-left: 20px;" onclick="GetTargetByIMO(event)">Buscar</button>
+                  <span class="tooltiptext">Pressione o botão para puxar os dados do navio</span>
+                </b>
+                <span id="error-message" class="error-message"></span>
+              </td>
+              <td>
+                <b class="tooltip">MMSI: <input type="text" id="mmsi" name="mmsi" placeholder="Digite o número MMSI" maxlength="9">
+                  <span class="tooltiptext">Número de identificação do serviço móvel marítimo (9 dígitos)</span>
+                </b>
+                <b class="tooltip">
+                  <button style="margin-left: 20px;" onclick="GetTargetByMMSI(event)">Buscar</button>
+                  <span class="tooltiptext">Pressione o botão para puxar os dados do navio</span>
+                </b>
+                <span id="error-message-mmsi" class="error-message"></span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <b class="tooltip">Nome do Navio: 
+                  <input type="text" id="nomeNavio" name="nomeNavio" placeholder="Digite o nome do navio">
+                  <span class="tooltiptext">Nome oficial do navio conforme registro</span>
+                </b>
+              </td>
+              <td>
+                <b class="tooltip">Bandeira: 
+                  <input type="text" id="bandeira" name="bandeira" placeholder="Digite a bandeira">
+                  <span class="tooltiptext">País de registro do navio (ex: Brasil, Panama, etc.)</span>
+                </b>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <b class="tooltip">Tipo de Navio: 
+                  <input type="text" id="tipoNavio" name="tipoNavio" placeholder="Digite o tipo do navio">
+                  <span class="tooltiptext">Categoria do navio (ex: Cargo, Pesquisa, Petroleiro, etc.)</span>
+                </b>
+              </td>
+              <td>
+                <b class="tooltip">Porto destino: 
+                  <input type="text" id="porto" name="porto" placeholder="Digite o porto de destino">
+                  <span class="tooltiptext">Próximo porto de destino do navio</span>
+                </b>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <b class="tooltip">Irin: 
+                  <input type="text" id="Irin" name="irin" placeholder="Digite o irin do navio">
+                  <span class="tooltiptext">Número de identificação do navio no sistema IRIN</span>
+                </b>
+              </td>
+              <td>
+                <b class="tooltip">ETA: 
+                  <input type="text" id="ETA" name="ETA" placeholder="000000ZXXX2025">
+                  <span class="tooltiptext">Data e hora estimada de chegada (formato: 000000ZXXX2025)</span>
+                </b>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <b class="tooltip">Última Posição: 
+                  <div class="coord-group">
+                    <input type="text" style="width: 40px" id="latitudeGrau" name="latitudeGrau" placeholder="00" maxlength="2">°
+                  </div>
+                  <div class="coord-group">
+                    <input type="text" style="width: 40px" id="latitudeMinuto" name="latitudeMinuto" placeholder="00" maxlength="2">'
+                  </div>
+                  <div class="coord-group">
+                    <input type="text" style="width: 40px" id="latitudeSegundo" name="latitudeSegundo" placeholder="00" maxlength="2">"
+                  </div>
+                  <div class="coord-group">
+                    <select id="latitudeDirecao" name="latitudeDirecao">
+                      <option value="S">S</option>
+                      <option value="N">N</option>
+                    </select>
+                  </div>,
+                  <div class="coord-group">
+                    <input type="text" style="width: 40px" id="longitudeGrau" name="longitudeGrau" placeholder="000" maxlength="3">°
+                  </div>
+                  <div class="coord-group">
+                    <input type="text" style="width: 40px" id="longitudeMinuto" name="longitudeMinuto" placeholder="00" maxlength="2">'
+                  </div>
+                  <div class="coord-group">
+                    <input type="text" style="width: 40px" id="longitudeSegundo" name="longitudeSegundo" placeholder="00" maxlength="2">"
+                  </div>
+                  <div class="coord-group">
+                    <select id="longitudeDirecao" name="longitudeDirecao">
+                      <option value="W">W</option>
+                      <option value="E">E</option>
+                    </select>
+                  </div>
+                  <span class="tooltiptext">Coordenadas da última posição conhecida do navio</span>
+                </b>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <b class="tooltip">Data-Hora da Última Posição: 
+                  <input style="width: 160px" type="text" id="dataPosicao" name="dataPosicao" placeholder="000000ZXXX2025">
+                  <span class="tooltiptext">Data e hora da última posição conhecida (formato: 000000ZXXX2025)</span>
+                </b>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <b class="tooltip">Imagem do Navio: 
+                  <span class="tooltiptext">Anexe uma foto ou imagem relevante do navio (opcional)</span>
+                </b><br>
+                <input type="file" id="imagemNavioInput" name="imagemNavioInput" accept="image/*">
+                <div id="imagemContainer" style="margin-top: 10px;">
+                  <img id="fotoNavio" src="" alt="Foto do Navio" style="display: none;">
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <b class="tooltip">
+          <button class="tybbutton" style="margin-left:0px;white-space: nowrap;" onclick="if(document.getElementById('TG1') .style.display=='none') {document.getElementById('TG1') .style.display=''}else{document.getElementById('TG1') .style.display='none'}" title="Click To Show/Hide Content" type="button">Abrir Formulário NAESP</button>
+          <span class="tooltiptext">Pressione sobre o botão para abrir formulario de Critérios de Classificação de NAESP</span>
+        </b><br>
+
+        <div class="tybtogglecontent" id="TG1" style="display: none;">
+          <h3>SAFETY</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Menu</th>
+                <th>Categoria</th>
+                <th>Subcategoria</th>
+                <th>Descrição</th>
+                <th>Code</th>
+                <th>Mark</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Pollution Hazard (DPC) -->
+              <tr>
+                <td rowspan="3">Pollution Hazard (DPC)</td>
+                <td>Hazardous Materials (DPC)</td>
+                <td>(DPC) Nuclear Materials Carrier</td>
+                <td id="descrição">Navios transportando resíduos (lixo) nuclear.</td>
+                <td>A2</td>
+                <td><input type="checkbox" name="options" value="A2"></td>
+              </tr>
+              <tr>
+                <td>Pollution History (DPC)</td>
+                <td>(DPC) Pollution Casualties</td>
+                <td id="descrição">Navio envolvidos em alguma ocorrência de poluição nos últimos dois anos.</td>
+                <td>A1</td>
+                <td><input type="checkbox" name="options" value="A1"></td>
+              </tr>
+              <tr>
+                <td>Single Hull (DPC)</td>
+                <td>(DPC) Single Hull Tanker</td>
+                <td id="descrição">Navios Petroleiros com casco simples.</td>
+                <td>A3</td>
+                <td><input type="checkbox" name="options" value="A3"></td>
+              </tr>
+              <!-- Vessel Associations (DPC) -->
+              <tr>
+                <td rowspan="8">Vessel Associations (DPC)</td>
+                <td rowspan="3">Classification Society (DPC)</td>
+                <td>(DPC) Class Society Performance</td>
+                <td id="descrição">A Sociedade Classificadora não é um membro da International Association Of Classification Society (IACS)</td>
+                <td>B1</td>
+                <td><input type="checkbox" name="options" value="B1"></td>
+              </tr>
+              <tr>
+                <td>(DPC) Class Suspended</td>
+                <td id="descrição">Navio encontra-se com uma classificação suspensa</td>
+                <td>B2</td>
+                <td><input type="checkbox" name="options" value="B2"></td>
+              </tr>
+              <tr>
+                <td>(DPC) No Classification Society</td>
+                <td id="descrição">Navio não possui uma Sociedade Classificadora e/ou foi desclassificado.</td>
+                <td>B3</td>
+                <td><input type="checkbox" name="options" value="B3"></td>
+              </tr>
+              <tr>
+                <td rowspan="2">P&I Club (DPC)</td>
+                <td>(DPC) Lower Tier P and I Clubs</td>
+                <td id="descrição">Cobertura do Clube "P & I" em nível inferior.</td>
+                <td>C1</td>
+                <td><input type="checkbox" name="options" value="C1"></td>
+              </tr>
+              <tr>
+                <td>(DPC) Unknown P and I Club</td>
+                <td id="descrição">O P e I Club não é fornecido ou está listado como Desconhecido.</td>
+                <td>C2</td>
+                <td><input type="checkbox" name="options" value="C2"></td>
+              </tr>
+              <tr>
+                <td rowspan="3">Vessel Flag (DPC)</td>
+                <td>(DPC) Flag is Unknown</td>
+                <td id="descrição">Navio com bandeira desconhecida.</td>
+                <td>D1</td>
+                <td><input type="checkbox" name="options" value="D1"></td>
+              </tr>
+              <tr>
+                <td>(DPC) Vessel Flag Falkland Islands</td>
+                <td id="descrição">Navio com bandeira das ilhas Falkland.</td>
+                <td>D2</td>
+                <td><input type="checkbox" name="options" value="D2"></td>
+              </tr>
+              <tr>
+                <td>(DPC) Vessel Flag from non LRIT country</td>
+                <td id="descrição">Bandeira do navio não consta na lista de países apoiados por um Sistema Long Range and Tracking of Ships (LRIT).</td>
+                <td>D3</td>
+                <td><input type="checkbox" name="options" value="D3"></td>
+              </tr>
+              <tr>
+                <td>Vessel Characteristics (DPC)</td>
+                <td>Vessel Age (DPC)</td>
+                <td>(DPC) Vessel Age 18 Years or more.</td>
+                <td id="descrição">Navio com idade superior a 18 anos.</td>
+                <td>D4</td>
+                <td><input type="checkbox" name="options" value="D4"></td>
+              </tr>
+              <tr>
+                <td rowspan="6">Vessel Performance (DPC)</td>
+                <td rowspan="2">Collision History (DPC)</td>
+                <td>(DPC) Non-Serious/Non-Pollution Casualty in Last 2 Years</td>
+                <td id="descrição" rowspan="2">A embarcação teve um acidente sem gravidade e sem poluição nos últimos 2 anos ou nao esteve emvolvido em nenhum incidente.</td>
+                <td rowspan="2">E1</td>
+                <td rowspan="2"><input type="checkbox" name="options" value="E1"></td>
+              </tr>
+              <tr>
+                <td>(DPC) Serious Casualty in Past Year</td>
+              </tr>
+              <tr>
+                <td>Detention History (DPC)</td>
+                <td>(DPC) History of detentions in the past thee years.</td>
+                <td id="descrição">Navio detido nos últimos três anos.</td>
+                <td>E2</td>
+                <td><input type="checkbox" name="options" value="E2"></td>
+              </tr>
+              <tr>
+                <td>ISPS Compliance (DPC)</td>
+                <td>(DPC) ISPS Port Compliance</td>
+                <td id="descrição">Navio atracou em um ou mais portos não aderentes ao The International Ship and Port Facility Security(ISPS CODE) nos últimos 3 portos.</td>
+                <td>E3</td>
+                <td><input type="checkbox" name="options" value="E3"></td>
+              </tr>
+              <tr>
+                <td rowspan="2">Port State Control (PSC) Inspections</td>
+                <td>Fewer than 5 Port State Control (PSC) Inspections in Last 3 Years</td>
+                <td id="descrição">Este navio teve menos de 5 inspeções (PSC) nos últimos três anos.</td>
+                <td>E4</td>
+                <td><input type="checkbox" name="options" value="E4"></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td id="descrição">Navio sem comunicação satelital (ComSat)</td>
+                <td>F</td>
+                <td><input type="checkbox" name="options" value="F"></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <h3>SECURITY</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Menu</th>
+                <th>Categoria</th>
+                <th>Subcategoria</th>
+                <th>Descrição</th>
+                <th>Code</th>
+                <th>Mark</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td rowspan="4">Trusted Ownership</td>
+                <td>Fleet Size</td>
+                <td>Small Fleet Size</td>
+                <td id="descrição">Frota de tamanho reduzido.</td>
+                <td>A1</td>
+                <td><input type="checkbox" name="options2" value="A1"></td>
+              </tr>
+              <tr>
+                <td>High Risk Ownership Country</td>
+                <td>Brasil VOI due to Ownership Countries </td>
+                <td id="descrição">Navios de Acompanhamento Especial devido ao País Proprietário</td>
+                <td>A2</td>
+                <td><input type="checkbox" name="options2" value="A2"></td>
+              </tr>
+              <tr>
+                <td>Research Vessel</td>
+                <td>Research Vessel</td>
+                <td id="descrição">Navio de Pesquisa em Águas Jurisdicionais Brasileiras</td>
+                <td>A3</td>
+                <td><input type="checkbox" name="options2" value="A3"></td>
+              </tr>
+              <tr>
+                <td>Vessel Flag</td>
+                <td>Brasil VOI due to Flag State</td>
+                <td id="descrição">Navios de Acompanhamento Especial devido ao Estado de Bandeira</td>
+                <td>A4</td>
+                <td><input type="checkbox" name="options2" value="A4"></td>
+              </tr>
+              <tr>
+                <td rowspan="4">Vessel Movements</td>
+                <td>First Time in Country</td>
+                <td>First Time in Brasil</td>
+                <td id="descrição">Embarcação há mais de 2 anos sem atracar em Porto Brasileiro.</td>
+                <td>B1</td>
+                <td><input type="checkbox" name="options2" value="B1"></td>
+              </tr>
+              <tr>
+                <td>High Risk Country Visit</td>
+                <td>Brasil VOI due to Previous Country Visit</td>
+                <td id="descrição">Navios de Acompanhamento Especial devido ao último País visitado</td>
+                <td>B2</td>
+                <td><input type="checkbox" name="options2" value="B2"></td>
+              </tr>
+              <tr>
+                <td>LPOC Age</td>
+                <td>No Port Call in Last 45 Days</td>
+                <td id="descrição">Nenhum porto visitado nos últimos 45 dias, exceto embarcações envolvidas em atividade de petróleo e gás (Apoio Marítimo).</td>
+                <td>B3</td>
+                <td><input type="checkbox" name="options2" value="B3"></td>
+              </tr>
+              <tr>
+                <td>No AIS Destination</td>
+                <td>Vessels not broadcasting NPOC in AIS</td>
+                <td id="descrição">Navios sem transmitir o próximo porto no AIS</td>
+                <td>B4</td>
+                <td><input type="checkbox" name="options2" value="B4"></td>
+              </tr>
+              <tr>
+                <td>Vessel Performance</td>
+                <td>ISPS Compliance (DPC)</td>
+                <td>ISPS Port Compliance Last 3 Ports</td>
+                <td id="descrição">Navio atracou em um ou mais portos não aderentes ao The International Ship and Port Facility Security CODE (ISPS CODE) nos últimos 3 portos.</td>
+                <td>C1</td>
+                <td><input type="checkbox" name="options2" value="C1"></td>
+              </tr>
+              <tr>
+                <td rowspan="13">Watchlists</td>
+                <td rowspan="13">VOI</td>
+                <td>Activist Group IMOs</td>
+                <td id="descrição">Embarcação ou Grupo Ativista</td>
+                <td>D1</td>
+                <td><input type="checkbox" name="options2" value="D1"></td>
+              </tr>
+              <tr>
+                <td>Foreign Vessels with Nuclear Propulsion</td>
+                <td id="descrição">Embarcações Estrangeiras com Propulsão Nuclear</td>
+                <td>D2</td>
+                <td><input type="checkbox" name="options2" value="D2"></td>
+              </tr>
+              <tr>
+                <td>Vessel Crew Support of Terrorism</td>
+                <td id="descrição">Embarcação empregada em Apoio ao Terrorismo</td>
+                <td>D3</td>
+                <td><input type="checkbox" name="options2" value="D3"></td>
+              </tr>
+              <tr>
+                <td>Vessel Drug or Precursor Smuggling</td>
+                <td id="descrição">Embarcações Transportando Droga ou Contrabandeando Precursores</td>
+                <td>D4</td>
+                <td><input type="checkbox" name="options2" value="D4"></td>
+              </tr>
+              <tr>
+                <td>Vessel Human Smuggling</td>
+                <td id="descrição">Embarcação empregada no Tráfico de Seres Humanos</td>
+                <td>D5</td>
+                <td><input type="checkbox" name="options2" value="D5"></td>
+              </tr>
+              <tr>
+                <td>Vessel Intel Collection</td>
+                <td id="descrição">Embarcação empregada na Coleta de Dados de Inteligência</td>
+                <td>D6</td>
+                <td><input type="checkbox" name="options2" value="D6"></td>
+              </tr>
+              <tr>
+                <td>Vessel Piracy Activity</td>
+                <td id="descrição">Embarcação envolvida em atos de Pirataria</td>
+                <td>D7</td>
+                <td><input type="checkbox" name="options2" value="D7"></td>
+              </tr>
+              <tr>
+                <td>Vessel Transporting WMD</td>
+                <td id="descrição">Embarcação transportando Armas de Destruição em Massa (WMD)</td>
+                <td>D8</td>
+                <td><input type="checkbox" name="options2" value="D8"></td>
+              </tr>
+              <tr>
+                <td>Vessel Weapons Smuggling</td>
+                <td id="descrição">Embarcação empregada no Contrabando de Armas</td>
+                <td>D9</td>
+                <td><input type="checkbox" name="options2" value="D9"></td>
+              </tr>
+              <tr>
+                <td>Vessel with Criminal Activity</td>
+                <td id="descrição">Embarcação empregada em Atividade Criminosa</td>
+                <td>D10</td>
+                <td><input type="checkbox" name="options2" value="D10"></td>
+              </tr>
+              <tr>
+                <td>Vessels Carrying Invasive Species or Pathogens</td>
+                <td id="descrição">Embarcação que Transporta Espécies Invasivas ou de Agentes Patogênicos</td>
+                <td>D11</td>
+                <td><input type="checkbox" name="options2" value="D11"></td>
+              </tr>
+              <tr>
+                <td>Vessels Harmful to Marine Resources</td>
+                <td id="descrição">Embarcação Nociva aos Meio Ambiente Marinhos</td>
+                <td>D12</td>
+                <td><input type="checkbox" name="options2" value="D12"></td>
+              </tr>
+              <tr>
+                <td>Vessels Sanctioned by UM</td>
+                <td id="descrição">Embarcação objeto de sansão por Resolução da ONU</td>
+                <td>D13</td>
+                <td><input type="checkbox" name="options2" value="D13"></td>
+              </tr>
+              <tr>
+                <td rowspan="6">COMPORTAMENTOS ANOMALOS</td>
+                <td rowspan="6" colspan="2">Lista Externa ao Camtes</td>
+                <td id="descrição">Velocidade inferior a 8 nós em mar aberto.</td>
+                <td>E1</td>
+                <td><input type="checkbox" name="options2" value="E1"></td>
+              </tr>
+              <tr>
+                <td id="descrição">Alteração de rumo superior a  40º navegando em mar aberto.</td>
+                <td>E2</td>
+                <td><input type="checkbox" name="options2" value="E2"></td>
+              </tr>
+              <tr>
+                <td id="descrição">Navio sem comando( com avaria de propulsão ou de governo).</td>
+                <td>E3</td>
+                <td><input type="checkbox" name="options2" value="E3"></td>
+              </tr>
+              <tr>
+                <td id="descrição">Navios com guardas armados a Bordo.</td>
+                <td>E4</td>
+                <td><input type="checkbox" name="options2" value="E4"></td>
+              </tr>
+              <tr>
+                <td id="descrição">Navios com Avaria Grave(" Broken Ships") ou  com Perda Total("Total Loss").</td>
+                <td>E5</td>
+                <td><input type="checkbox" name="options2" value="E5"></td>
+              </tr>
+              <tr>
+                <td id="descrição">Navios de Pesquisa Não Autorizados pelo EMA/DPC ou operando em desacordo com a autorização concedida.</td>
+                <td>E6</td>
+                <td><input type="checkbox" name="options2" value="E6"></td>
+              </tr>
+            </tbody>
+          </table>
+          <br>
+          <button onclick="generateResponse2(event)">Gerar Codigo NAESP</button><br>
+        </div>
+        <br>
+        
+        <div class="form-section">
+          <b>Safety: <span style="width: 380px" type="text" id="safety1" name="safety1" placeholder="Análise de risco SAFETY"></span></b><br>
+          <b>Security: <span style="width: 380px" type="text" id="security2" name="security2" placeholder="Análise de risco SECURITY"></span></b><br>
+          <b>CLASSIFICAÇÃO CAMTES: </b>
+          <select style="width: 80px" type="text" id="naesp" name="naesp">
+            <option value="VOI">VOI</option>
+            <option value="COI">COI</option>
+            <option value="CCOI">CCOI</option>
+          </select><br><br>  
+          
+          <button style="margin-left: 10px;" type="button" onclick="criarTxt()">Criar TXT</button><br>
+          
+          <b style="color: white;">Para comentario:</b><br>
+          <b style="color: white;">Safety: <br><span style="width: 380px;" type="text" id="safety3" name="safety3" placeholder="Análise de risco SAFETY"></span></b><br>
+          <b style="color: white;">Security: <br><span style="width: 380px;" type="text" id="security4" name="security4" placeholder="Análise de risco SECURITY"></span></b><br>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Rodapé -->
+  <div class="footer">
+    &copy; 2025 Central Marítima e Operacional | Todos os direitos reservados.
+  </div>
+
+  <script>
+    // Função para carregar imagem do navio
+    document.getElementById('imagemNavioInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = document.getElementById('fotoNavio');
+          img.src = e.target.result;
+          img.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Funções de busca (simplificadas para exemplo)
+    function GetTargetByMMSI(event) {
+      event.preventDefault();
+      alert("Função de busca por MMSI - implementação simplificada para exemplo");
+    }
+
+    function GetTargetByIMO(event) {
+      event.preventDefault();
+      alert("Função de busca por IMO - implementação simplificada para exemplo");
+    }
+
+    // Função para gerar resposta NAESP
+    function generateResponse2(event) {
+      event.preventDefault();
+      alert("Função para gerar código NAESP - implementação simplificada para exemplo");
+    }
+
+    // Função para criar arquivo TXT
+    function criarTxt() {
+      alert("Função para criar arquivo TXT - implementação simplificada para exemplo");
+    }
+  </script>
+</body>
+</html>
+```
